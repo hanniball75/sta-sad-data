@@ -1,0 +1,18 @@
+{
+  "updated": "2026-09-27",
+  "currency": "BAM",
+  "fbih": {
+    "svilaj_odzak": {
+      "name": "A1 Svilaj – Odžak",
+      "price": 1.2,
+      "operator": "JP Autoceste FBiH"
+    }
+  },
+  "rs": {
+    "tovira_kostajnica": {
+      "name": "Koridor Vc Tovira – Kostajnica",
+      "price": 1.0,
+      "operator": "Autoputevi Republike Srpske"
+    }
+  }
+}
