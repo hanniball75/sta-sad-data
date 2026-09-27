@@ -100,49 +100,69 @@ def extract_category_i_rows(html):
         "html.parser",
     )
 
+    text = soup.get_text(
+        " ",
+        strip=True,
+    )
+
+    text = text.replace(
+        "\xa0",
+        " ",
+    )
+
+    text = re.sub(
+        r"\s+",
+        " ",
+        text,
+    )
+
     found = {}
 
     station_names = list(
         SOURCE_TO_APP.keys()
     ) + ["Bregana"]
 
-    for row in soup.find_all("tr"):
-        row_text = " ".join(
-            row.stripped_strings
+    for station in station_names:
+
+        station_pattern = r"\s+".join(
+            re.escape(part)
+            for part in station.split()
         )
 
-        row_text = " ".join(
-            row_text.split()
+        pattern = (
+            station_pattern
+            + r"\s+"
+            + r"(\d+[,.]\d+)\s*€\s+"
+            + r"(\d+[,.]\d+)\s*€\s+"
+            + r"(\d+[,.]\d+)\s*€\s+"
+            + r"(\d+[,.]\d+)\s*€\s+"
+            + r"(\d+[,.]\d+)\s*€"
         )
 
-        station = None
+        match = re.search(
+            pattern,
+            text,
+            re.IGNORECASE,
+        )
 
-        for name in station_names:
-            if name in row_text:
-                station = name
-                break
-
-        if station is None:
+        if match is None:
             continue
 
-        prices = re.findall(
-            r"(\d+[,.]\d+)\s*€",
-            row_text,
-        )
-
-        if len(prices) < 2:
-            continue
-
-        # HAC redoslijed:
-        # IA, I, II, III, IV
         category_i_price = float(
-            prices[1].replace(",", ".")
+            match.group(2).replace(
+                ",",
+                ".",
+            )
         )
 
         found[station] = category_i_price
 
-    return found
+    print(
+        "Pronađene HAC stanice:",
+        list(found.keys()),
+    )
 
+    return found
 def load_existing():
     if not OUTPUT.exists():
         return {}
