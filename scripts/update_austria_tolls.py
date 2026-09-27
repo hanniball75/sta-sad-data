@@ -254,6 +254,42 @@ def first_single_trip_price(
     return euro_number(match.group(1))
 
 
+def single_trip_price_near_heading(
+    text: str,
+    heading_pattern: str,
+    label: str,
+    max_distance: int = 700,
+) -> float:
+    matches = list(
+        re.finditer(
+            heading_pattern,
+            text,
+            flags=re.IGNORECASE,
+        )
+    )
+
+    # Idemo od posljednje pojave naslova unazad.
+    # Tako izbjegavamo navigaciju/TOC na vrhu stranice.
+    for heading in reversed(matches):
+        block = text[
+            heading.start():
+            min(len(text), heading.start() + max_distance)
+        ]
+
+        match = re.search(
+            r"Single Trip\s*(?:\||:)?\s*EUR\s*([0-9]+(?:[.,][0-9]{1,2})?)",
+            block,
+            flags=re.IGNORECASE,
+        )
+
+        if match:
+            return euro_number(match.group(1))
+
+    raise RuntimeError(
+        f"Nisam pronašao Single Trip cijenu za {label}"
+    )
+
+
 def read_section_tolls(text: str) -> dict[str, dict[str, object]]:
     text = normalize_for_search(text)
 
@@ -293,10 +329,9 @@ def read_section_tolls(text: str) -> dict[str, dict[str, object]]:
         "A13 Brenner",
     )
 
-    s16 = section_block(
+    s16_price = single_trip_price_near_heading(
         text,
-        r"Arlberg",
-        [],
+        r"Arlberg Tunnel\s*\(S\s*16\)",
         "S16 Arlberg",
     )
 
@@ -358,10 +393,7 @@ def read_section_tolls(text: str) -> dict[str, dict[str, object]]:
         },
         "s16_arlberg": {
             "name": "S16 Arlberg",
-            "price": first_single_trip_price(
-                s16,
-                "S16 Arlberg",
-            ),
+            "price": s16_price,
         },
     }
 
