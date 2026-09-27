@@ -151,59 +151,60 @@ def read_dars_prices():
         DARS_URL
     )
 
-    seven_days = find_price_near(
-        text,
-        [
-            "7-day",
-            "7 day",
-            "weekly",
-            "7 days",
-        ],
-        5.0,
-        40.0,
-    )
-
-    one_month = find_price_near(
-        text,
-        [
-            "1-month",
-            "1 month",
-            "monthly",
-            "month",
-        ],
-        10.0,
-        80.0,
-    )
-
-    annual = find_price_near(
-        text,
-        [
-            "annual",
-            "1 year",
-            "yearly",
-            "year",
-        ],
-        50.0,
-        300.0,
-    )
-
-    if (
-        seven_days is None
-        or one_month is None
-        or annual is None
-    ):
-        raise RuntimeError(
-            "SIGURNOSNA BLOKADA: "
-            "DARS cijene nisu "
-            "pouzdano prepoznate."
-        )
-
-    return {
-        "7_days": seven_days,
-        "1_month": one_month,
-        "1_year": annual,
+    patterns = {
+        "7_days": (
+            r"7[- ]day"
+            r"[^€]{0,250}"
+            r"2A"
+            r"[^€]{0,250}"
+            r"€\s*"
+            r"(\d+(?:[,.]\d+)?)"
+        ),
+        "1_month": (
+            r"1[- ]month"
+            r"[^€]{0,250}"
+            r"2A"
+            r"[^€]{0,250}"
+            r"€\s*"
+            r"(\d+(?:[,.]\d+)?)"
+        ),
+        "1_year": (
+            r"Annual"
+            r"[^€]{0,250}"
+            r"2A"
+            r"[^€]{0,250}"
+            r"€\s*"
+            r"(\d+(?:[,.]\d+)?)"
+        ),
     }
 
+    prices = {}
+
+    for key, pattern in patterns.items():
+        match = re.search(
+            pattern,
+            text,
+            re.IGNORECASE,
+        )
+
+        if match is None:
+            raise RuntimeError(
+                "SIGURNOSNA BLOKADA: "
+                f"nije pronađena cijena "
+                f"za {key}."
+            )
+
+        prices[key] = float(
+            match.group(1)
+            .replace(",", ".")
+        )
+
+    print(
+        "ASFINAG Slovenija 2A:",
+        prices,
+    )
+
+    return prices
 
 def read_karavanke_price():
     text = fetch_text(
