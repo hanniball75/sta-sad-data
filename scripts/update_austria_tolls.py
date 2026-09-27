@@ -40,13 +40,11 @@ def fetch_text(url: str) -> str:
     for tag in soup(["script", "style", "noscript"]):
         tag.decompose()
 
-    return " ".join(
-        soup.get_text(" ", strip=True).split()
-    )
+    return " ".join(soup.get_text(" ", strip=True).split())
 
 
 def euro_number(raw: str) -> float:
-    cleaned = raw.strip()
+    cleaned = raw.strip().replace("\u00a0", " ")
 
     if "," in cleaned:
         cleaned = cleaned.replace(".", "").replace(",", ".")
@@ -54,120 +52,314 @@ def euro_number(raw: str) -> float:
     return round(float(cleaned), 2)
 
 
-def extract_price(
-    text: str,
-    patterns: list[str],
+def normalize_for_search(text: str) -> str:
+    return (
+        text.replace("\u2011", "-")
+        .replace("\u2012", "-")
+        .replace("\u2013", "-")
+        .replace("\u2014", "-")
+        .replace("\u00a0", " ")
+    )
+
+
+def extract_passenger_car_price_from_block(
+    block: str,
     label: str,
 ) -> float:
+    patterns = [
+        r"Passenger car\s*\(Category B\)\s*:\s*EUR\s*([0-9]+(?:[.,][0-9]{1,2})?)",
+        r"Passenger car\s*\(Category B\).*?EUR\s*([0-9]+(?:[.,][0-9]{1,2})?)",
+    ]
+
     for pattern in patterns:
         match = re.search(
             pattern,
-            text,
+            block,
             flags=re.IGNORECASE | re.DOTALL,
         )
         if match:
             return euro_number(match.group(1))
 
     raise RuntimeError(
-        f"Nisam pronašao cijenu za: {label}"
+        f"Nisam pronašao Passenger car cijenu za {label}"
     )
 
 
-def read_vignettes(text: str) -> dict[str, float]:
-    return {
-        "1_day": extract_price(
+def find_best_label_block(
+    text: str,
+    label_pattern: str,
+    next_label_patterns: list[str],
+    label: str,
+) -> str:
+    matches = list(
+        re.finditer(
+            label_pattern,
             text,
-            [
-                r"1-day vignette.*?Passenger car\s*\(Category B\).*?EUR\s*([0-9]+[.,][0-9]{2})",
-                r"1-day vignette.*?Passenger car.*?EUR\s*([0-9]+[.,][0-9]{2})",
-            ],
+            flags=re.IGNORECASE,
+        )
+    )
+
+    candidates: list[str] = []
+
+    for match in matches:
+        start = match.start()
+        search_start = match.end()
+        end = min(len(text), start + 1600)
+
+        for next_pattern in next_label_patterns:
+            next_match = re.search(
+                next_pattern,
+                text[search_start:end],
+                flags=re.IGNORECASE,
+            )
+            if next_match:
+                candidate_end = search_start + next_match.start()
+                if candidate_end > start:
+                    end = min(end, candidate_end)
+
+        block = text[start:end]
+
+        if re.search(
+            r"Passenger car\s*\(Category B\)",
+            block,
+            flags=re.IGNORECASE,
+        ):
+            candidates.append(block)
+
+    if not candidates:
+        raise RuntimeError(
+            f"Nisam pronašao pouzdan blok za {label}"
+        )
+
+    # Biramo najkraći validni blok da ne "preskoči" u sljedeći proizvod.
+    return min(candidates, key=len)
+
+
+def read_vignettes(text: str) -> dict[str, float]:
+    text = normalize_for_search(text)
+
+    one_day = find_best_label_block(
+        text,
+        r"1-day vignette",
+        [
+            r"10-day vignette",
+            r"2-month vignette",
+            r"Annual vignette",
+        ],
+        "1-day vignette",
+    )
+
+    ten_day = find_best_label_block(
+        text,
+        r"10-day vignette",
+        [
+            r"2-month vignette",
+            r"Annual vignette",
+        ],
+        "10-day vignette",
+    )
+
+    two_month = find_best_label_block(
+        text,
+        r"2-month vignette",
+        [
+            r"Annual vignette",
+        ],
+        "2-month vignette",
+    )
+
+    annual = find_best_label_block(
+        text,
+        r"Annual vignette",
+        [],
+        "Annual vignette",
+    )
+
+    return {
+        "1_day": extract_passenger_car_price_from_block(
+            one_day,
             "1-day vignette",
         ),
-        "10_days": extract_price(
-            text,
-            [
-                r"10-day vignette.*?Passenger car\s*\(Category B\).*?EUR\s*([0-9]+[.,][0-9]{2})",
-                r"10-day vignette.*?Passenger car.*?EUR\s*([0-9]+[.,][0-9]{2})",
-            ],
+        "10_days": extract_passenger_car_price_from_block(
+            ten_day,
             "10-day vignette",
         ),
-        "2_months": extract_price(
-            text,
-            [
-                r"2-month vignette.*?Passenger car\s*\(Category B\).*?EUR\s*([0-9]+[.,][0-9]{2})",
-                r"2-month vignette.*?Passenger car.*?EUR\s*([0-9]+[.,][0-9]{2})",
-            ],
+        "2_months": extract_passenger_car_price_from_block(
+            two_month,
             "2-month vignette",
         ),
-        "1_year": extract_price(
-            text,
-            [
-                r"Annual vignette.*?Passenger car\s*\(Category B\).*?EUR\s*([0-9]+[.,][0-9]{2})",
-                r"Annual vignette.*?Passenger car.*?EUR\s*([0-9]+[.,][0-9]{2})",
-            ],
-            "annual vignette",
+        "1_year": extract_passenger_car_price_from_block(
+            annual,
+            "Annual vignette",
         ),
     }
 
 
+def section_block(
+    text: str,
+    start_pattern: str,
+    end_patterns: list[str],
+    label: str,
+) -> str:
+    start_match = re.search(
+        start_pattern,
+        text,
+        flags=re.IGNORECASE,
+    )
+
+    if not start_match:
+        raise RuntimeError(
+            f"Nisam pronašao sekciju: {label}"
+        )
+
+    start = start_match.start()
+    search_start = start_match.end()
+    end = len(text)
+
+    for pattern in end_patterns:
+        m = re.search(
+            pattern,
+            text[search_start:],
+            flags=re.IGNORECASE,
+        )
+        if m:
+            end = min(end, search_start + m.start())
+
+    return text[start:end]
+
+
+def first_single_trip_price(
+    block: str,
+    label: str,
+) -> float:
+    match = re.search(
+        r"Single Trip(?:\s+[A-Za-z0-9()/ -]+?)?\s*(?:\||:)?\s*EUR\s*([0-9]+(?:[.,][0-9]{1,2})?)",
+        block,
+        flags=re.IGNORECASE,
+    )
+
+    if not match:
+        # Fallback za tekst bez tabelarnih separatora.
+        match = re.search(
+            r"Single Trip.*?EUR\s*([0-9]+(?:[.,][0-9]{1,2})?)",
+            block,
+            flags=re.IGNORECASE | re.DOTALL,
+        )
+
+    if not match:
+        raise RuntimeError(
+            f"Nisam pronašao Single Trip cijenu za {label}"
+        )
+
+    return euro_number(match.group(1))
+
+
 def read_section_tolls(text: str) -> dict[str, dict[str, object]]:
-    def p(patterns: list[str], label: str) -> float:
-        return extract_price(text, patterns, label)
+    text = normalize_for_search(text)
+
+    a9 = section_block(
+        text,
+        r"Bosruck Toll Station and Gleinalm Toll Station\s*\(A\s*9\)",
+        [
+            r"Tauern/Katschberg Toll Station\s*\(A\s*10\)",
+        ],
+        "A9 Bosruck/Gleinalm",
+    )
+
+    a10 = section_block(
+        text,
+        r"Tauern/Katschberg Toll Station\s*\(A\s*10\)",
+        [
+            r"Karawanken Toll Station\s*\(A\s*11\)",
+        ],
+        "A10 Tauern/Katschberg",
+    )
+
+    a11 = section_block(
+        text,
+        r"Karawanken Toll Station\s*\(A\s*11\)",
+        [
+            r"Brenner Motorway\s*\(A\s*13\)",
+        ],
+        "A11 Karawanken",
+    )
+
+    a13 = section_block(
+        text,
+        r"Brenner Motorway\s*\(A\s*13\)",
+        [
+            r"Arlberg",
+        ],
+        "A13 Brenner",
+    )
+
+    s16 = section_block(
+        text,
+        r"Arlberg",
+        [],
+        "S16 Arlberg",
+    )
+
+    bosruck_match = re.search(
+        r"Single Trip Bosruck Toll Station\s*(?:\||:)?\s*EUR\s*([0-9]+(?:[.,][0-9]{1,2})?)",
+        a9,
+        flags=re.IGNORECASE,
+    )
+
+    gleinalm_match = re.search(
+        r"Single Trip Gleinalm Toll Station\s*(?:\||:)?\s*EUR\s*([0-9]+(?:[.,][0-9]{1,2})?)",
+        a9,
+        flags=re.IGNORECASE,
+    )
+
+    if not bosruck_match:
+        raise RuntimeError(
+            "Nisam pronašao cijenu A9 Bosruck"
+        )
+
+    if not gleinalm_match:
+        raise RuntimeError(
+            "Nisam pronašao cijenu A9 Gleinalm"
+        )
 
     return {
         "a9_bosruck": {
             "name": "A9 Bosruck",
-            "price": p(
-                [
-                    r"Bosruck Toll Station.*?Single Trip Bosruck Toll Station.*?EUR\s*([0-9]+[.,][0-9]{2})",
-                    r"Single Trip Bosruck Toll Station.*?EUR\s*([0-9]+[.,][0-9]{2})",
-                ],
-                "A9 Bosruck",
+            "price": euro_number(
+                bosruck_match.group(1)
             ),
         },
         "a9_gleinalm": {
             "name": "A9 Gleinalm",
-            "price": p(
-                [
-                    r"Gleinalm Toll Station.*?Single Trip Gleinalm Toll Station.*?EUR\s*([0-9]+[.,][0-9]{2})",
-                    r"Single Trip Gleinalm Toll Station.*?EUR\s*([0-9]+[.,][0-9]{2})",
-                ],
-                "A9 Gleinalm",
+            "price": euro_number(
+                gleinalm_match.group(1)
             ),
         },
         "a10_tauern_katschberg": {
             "name": "A10 Tauern/Katschberg",
-            "price": p(
-                [
-                    r"Tauern/Katschberg Toll Station.*?Single Trip.*?EUR\s*([0-9]+[.,][0-9]{2})",
-                ],
+            "price": first_single_trip_price(
+                a10,
                 "A10 Tauern/Katschberg",
             ),
         },
         "a11_karawanken": {
             "name": "A11 Karawanken (smjer Slovenija)",
-            "price": p(
-                [
-                    r"Karawanken Toll Station.*?Single Trip.*?EUR\s*([0-9]+[.,][0-9]{2})",
-                ],
+            "price": first_single_trip_price(
+                a11,
                 "A11 Karawanken",
             ),
         },
         "a13_brenner": {
             "name": "A13 Brenner",
-            "price": p(
-                [
-                    r"Brenner Motorway.*?Single Trip.*?EUR\s*([0-9]+[.,][0-9]{2})",
-                ],
+            "price": first_single_trip_price(
+                a13,
                 "A13 Brenner",
             ),
         },
         "s16_arlberg": {
             "name": "S16 Arlberg",
-            "price": p(
-                [
-                    r"Arlberg Tunnel.*?Single Trip.*?EUR\s*([0-9]+[.,][0-9]{2})",
-                ],
+            "price": first_single_trip_price(
+                s16,
                 "S16 Arlberg",
             ),
         },
@@ -175,23 +367,39 @@ def read_section_tolls(text: str) -> dict[str, dict[str, object]]:
 
 
 def validate(data: dict) -> None:
+    # Stroga zaštita od pogrešnog parsiranja stranice.
     expected_vignettes = {
-        "1_day": (5.0, 30.0),
-        "10_days": (5.0, 40.0),
-        "2_months": (10.0, 80.0),
-        "1_year": (50.0, 250.0),
+        "1_day": (5.0, 20.0),
+        "10_days": (8.0, 25.0),
+        "2_months": (20.0, 60.0),
+        "1_year": (70.0, 180.0),
     }
 
     for key, (low, high) in expected_vignettes.items():
-        value = data["vignettes"]["car"][key]
+        value = float(
+            data["vignettes"]["car"][key]
+        )
+
         if not low <= value <= high:
             raise RuntimeError(
                 f"Sumnjiva cijena {key}: {value}"
             )
 
-    for key, item in data["special_tolls"].items():
-        value = float(item["price"])
-        if not 1.0 <= value <= 100.0:
+    expected_special = {
+        "a9_bosruck": (3.0, 15.0),
+        "a9_gleinalm": (5.0, 25.0),
+        "a10_tauern_katschberg": (8.0, 30.0),
+        "a11_karawanken": (5.0, 20.0),
+        "a13_brenner": (8.0, 30.0),
+        "s16_arlberg": (8.0, 30.0),
+    }
+
+    for key, (low, high) in expected_special.items():
+        value = float(
+            data["special_tolls"][key]["price"]
+        )
+
+        if not low <= value <= high:
             raise RuntimeError(
                 f"Sumnjiva posebna putarina {key}: {value}"
             )
@@ -211,7 +419,10 @@ def main() -> None:
     vignettes = read_vignettes(vignette_text)
     special_tolls = read_section_tolls(section_text)
 
-    print("ASFINAG Austrija vinjete:", vignettes)
+    print(
+        "ASFINAG Austrija vinjete:",
+        vignettes,
+    )
     print(
         "ASFINAG posebne putarine:",
         {
@@ -235,18 +446,26 @@ def main() -> None:
     validate(new_data)
 
     old_data = None
+
     if OUTPUT_FILE.exists():
         try:
             old_data = json.loads(
-                OUTPUT_FILE.read_text(encoding="utf-8")
+                OUTPUT_FILE.read_text(
+                    encoding="utf-8"
+                )
             )
         except Exception:
             old_data = None
 
-    if old_data is not None:
-        if prices_only(old_data) == prices_only(new_data):
-            print("Cijene Austrije nisu promijenjene.")
-            return
+    if (
+        old_data is not None
+        and prices_only(old_data)
+        == prices_only(new_data)
+    ):
+        print(
+            "Cijene Austrije nisu promijenjene."
+        )
+        return
 
     OUTPUT_FILE.write_text(
         json.dumps(
