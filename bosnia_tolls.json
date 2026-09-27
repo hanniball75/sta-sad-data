@@ -9,10 +9,17 @@
     }
   },
   "rs": {
+    "gradiska_kostajnica": {
+      "name": "Gradiška – Kostajnica",
+      "price": 11.0,
+      "operator": "Autoputevi Republike Srpske"
+    },
     "tovira_kostajnica": {
       "name": "Koridor Vc Tovira – Kostajnica",
       "price": 1.0,
       "operator": "Autoputevi Republike Srpske"
     }
   }
+}
+
 }
