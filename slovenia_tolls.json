@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "updated": "2026-09-27",
+  "country": "Slovenia",
+  "currency": "EUR",
+  "vignettes": {
+    "2A": {
+      "7_days": 16.00,
+      "1_month": 32.00,
+      "1_year": 117.50
+    },
+    "2B": {
+      "7_days": 32.00,
+      "1_month": 64.10,
+      "1_year": 235.00
+    },
+    "motorcycle": {
+      "7_days": 8.00,
+      "6_months": 32.00,
+      "1_year": 58.70
+    }
+  },
+  "special_tolls": {
+    "karavanke": {
+      "name": "Predor Karavanke",
+      "price": 9.00,
+      "vehicle": "passenger_car",
+      "separate_from_vignette": true
+    }
+  }
+}
