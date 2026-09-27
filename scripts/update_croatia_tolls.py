@@ -102,31 +102,46 @@ def extract_category_i_rows(html):
 
     found = {}
 
-    for row in soup.find_all("tr"):
-        cells = [
-            cell.get_text(" ", strip=True)
-            for cell in row.find_all(
-                ["th", "td"]
-            )
-        ]
+    station_names = list(
+        SOURCE_TO_APP.keys()
+    ) + ["Bregana"]
 
-        if len(cells) < 3:
+    for row in soup.find_all("tr"):
+        row_text = " ".join(
+            row.stripped_strings
+        )
+
+        row_text = " ".join(
+            row_text.split()
+        )
+
+        station = None
+
+        for name in station_names:
+            if name in row_text:
+                station = name
+                break
+
+        if station is None:
             continue
 
-        station = " ".join(cells[0].split())
-        if "Brod zapad" in station:
-        station = "Sl. Brod zapad"
+        prices = re.findall(
+            r"(\d+[,.]\d+)\s*€",
+            row_text,
+        )
 
-        if "Brod istok" in station:
-        station = "Sl. Brod istok"
+        if len(prices) < 2:
+            continue
 
-        if station in SOURCE_TO_APP or station == "Bregana":
-            found[station] = parse_price(
-                cells[2]
-            )
+        # HAC redoslijed:
+        # IA, I, II, III, IV
+        category_i_price = float(
+            prices[1].replace(",", ".")
+        )
+
+        found[station] = category_i_price
 
     return found
-
 
 def load_existing():
     if not OUTPUT.exists():
