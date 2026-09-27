@@ -113,7 +113,7 @@ def extract_category_i_rows(html):
         if len(cells) < 3:
             continue
 
-        station = cells[0].strip()
+        station = " ".join(cells[0].split())
 
         if station in SOURCE_TO_APP or station == "Bregana":
             found[station] = parse_price(
