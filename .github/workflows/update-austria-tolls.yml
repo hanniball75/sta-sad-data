@@ -1,0 +1,46 @@
+name: Update Austria tolls
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "37 3 * * *"
+
+permissions:
+  contents: write
+
+jobs:
+  update-austria-tolls:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests beautifulsoup4
+
+      - name: Read Austria vignette and section toll prices
+        run: python scripts/update_austria_tolls.py
+
+      - name: Commit changed Austria prices
+        shell: bash
+        run: |
+          if git diff --quiet -- austria_tolls.json; then
+            echo "Nema promjene cijena. Nema commita."
+            exit 0
+          fi
+
+          git config user.name "sta-sad-bot"
+          git config user.email "sta-sad-bot@users.noreply.github.com"
+
+          git add austria_tolls.json
+          git commit -m "Auto-update Austria toll prices"
+          git push
