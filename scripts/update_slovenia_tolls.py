@@ -10,7 +10,7 @@ from urllib3.util.retry import Retry
 
 OUTPUT = Path("slovenia_tolls.json")
 
-DARS_URL = "https://evinjeta.dars.si/en"
+DARS_URL = "https://shop.asfinag.at/en/toll-products/slovenia/?type=car"
 
 KARAVANKE_URL = (
     "https://www.gov.si/novice/"
