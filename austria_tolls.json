@@ -1,0 +1,41 @@
+{
+  "updated": "2026-09-27",
+  "vignettes": {
+    "car": {
+      "1_day": 9.6,
+      "10_days": 12.8,
+      "2_months": 32.0,
+      "1_year": 106.8
+    }
+  },
+  "special_tolls": {
+    "a9_bosruck": {
+      "name": "A9 Bosruck",
+      "price": 7.0
+    },
+    "a9_gleinalm": {
+      "name": "A9 Gleinalm",
+      "price": 12.0
+    },
+    "a10_tauern_katschberg": {
+      "name": "A10 Tauern/Katschberg",
+      "price": 15.0
+    },
+    "a11_karawanken": {
+      "name": "A11 Karawanken (smjer Slovenija)",
+      "price": 9.0
+    },
+    "a13_brenner": {
+      "name": "A13 Brenner",
+      "price": 12.5
+    },
+    "s16_arlberg": {
+      "name": "S16 Arlberg",
+      "price": 13.0
+    }
+  },
+  "sources": {
+    "vignette": "https://bmp.asfinag.at/en/vignette-and-section-tolls/vignette/",
+    "section_toll": "https://bmp.asfinag.at/en/vignette-and-section-tolls/section-toll/"
+  }
+}
