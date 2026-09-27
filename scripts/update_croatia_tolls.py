@@ -114,6 +114,11 @@ def extract_category_i_rows(html):
             continue
 
         station = " ".join(cells[0].split())
+        if "Brod zapad" in station:
+        station = "Sl. Brod zapad"
+
+        if "Brod istok" in station:
+        station = "Sl. Brod istok"
 
         if station in SOURCE_TO_APP or station == "Bregana":
             found[station] = parse_price(
