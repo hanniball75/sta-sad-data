@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "updated": "2026-09-27",
+  "country": "Croatia",
+  "currency": "EUR",
+  "vehicleCategory": "I",
+  "tolls": {
+    "Ivanić Grad": 2.7,
+    "Križ": 3.4,
+    "Popovača": 4.3,
+    "Kutina": 5.6,
+    "Lipovljani": 6.6,
+    "Novska": 7.1,
+    "Okučani": 8.8,
+    "Nova Gradiška": 9.9,
+    "Lužani": 11.5,
+    "Slavonski Brod zapad": 12.9,
+    "Slavonski Brod istok": 13.7,
+    "ČCP Svilaj": 15.3,
+    "Velika Kopanica": 15.7,
+    "Đakovo": 16.6,
+    "Babina Greda": 16.6,
+    "Županja": 17.5,
+    "Čepin": 18.2,
+    "Spačva": 18.6,
+    "Osijek": 18.7,
+    "Lipovac": 19.6,
+    "Sudaraž": 20.5
+  }
+}
