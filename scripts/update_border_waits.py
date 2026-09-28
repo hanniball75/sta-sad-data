@@ -539,6 +539,10 @@ def fetch_bihamk() -> tuple[dict[str, dict], dict]:
     crossings: dict[str, dict] = {}
     found = 0
 
+    # JEDAN Granica.rs fetcher za sve prelaze.
+    # Direktni HTTP je primarni put; Chromium se pali samo ako zatreba.
+    granica_fetcher = GranicaRsFetcher()
+
     for key, spec in CROSSINGS.items():
         section = bihamk_section_text(
             soup,
@@ -991,53 +995,165 @@ def granica_rs_parse_rendered(
     }
 
 
-def fetch_granica_rs_page(
-    url: str,
-    expected_direction_text: str,
-) -> dict:
+class GranicaRsFetcher:
     """
-    Granica.rs live vrijednosti se osvježavaju JavaScriptom.
-    Zato koristimo pravi Chromium umjesto requests/BeautifulSoup.
-    """
-    with sync_playwright() as p:
-        browser = p.chromium.launch(
-            headless=True,
-            args=[
-                "--no-sandbox",
-                "--disable-dev-shm-usage",
-            ],
-        )
+    Brzi Granica.rs fetcher.
 
-        page = browser.new_page(
-            locale="sr-RS",
-            user_agent=HEADERS["User-Agent"],
-            extra_http_headers={
+    Redoslijed:
+    1) requests + no-cache + cache-busting URL
+    2) samo ako to ne uspije: jedan zajednički Chromium fallback
+
+    Browser se više NE pokreće za svaki prelaz/smjer posebno.
+    """
+
+    def __init__(self) -> None:
+        self.session = requests.Session()
+        self.session.headers.update(
+            {
+                **HEADERS,
                 "Cache-Control": "no-cache, no-store, max-age=0",
                 "Pragma": "no-cache",
-            },
+            }
         )
+
+        self.cache: dict[tuple[str, str], dict] = {}
+
+        self._playwright = None
+        self._browser = None
+        self._context = None
+
+        self.stats = {
+            "requests_ok": 0,
+            "browser_fallback": 0,
+            "cache_hits": 0,
+            "failures": 0,
+        }
+
+    def _cache_bust_url(self, url: str) -> str:
+        stamp = int(datetime.now(timezone.utc).timestamp() * 1000)
+        separator = "&" if "?" in url else "?"
+        return f"{url}{separator}_sta_sad={stamp}"
+
+    def _camera_from_soup(
+        self,
+        soup: BeautifulSoup,
+    ) -> tuple[Optional[str], Optional[str]]:
+        for img in soup.find_all("img"):
+            src = (
+                img.get("src")
+                or img.get("data-src")
+                or ""
+            )
+
+            if "granicars-snapshots" in src:
+                return src, img.get("alt")
+
+        return None, None
+
+    def _requests_fetch(
+        self,
+        url: str,
+        expected_direction_text: str,
+    ) -> dict:
+        request_url = self._cache_bust_url(url)
+
+        response = self.session.get(
+            request_url,
+            timeout=18,
+        )
+        response.raise_for_status()
+        response.encoding = (
+            response.apparent_encoding
+            or "utf-8"
+        )
+
+        soup = BeautifulSoup(
+            response.text,
+            "html.parser",
+        )
+
+        # Zadržavamo redove koliko možemo;
+        # parser ih kasnije sam normalizuje.
+        body_text = soup.get_text(
+            "\n",
+            strip=True,
+        )
+
+        parsed = granica_rs_parse_rendered(
+            body_text,
+            expected_direction_text,
+            url,
+        )
+
+        camera_url, camera_alt = (
+            self._camera_from_soup(soup)
+        )
+
+        parsed["camera_url"] = camera_url
+        parsed["camera_alt"] = camera_alt
+        parsed["transport"] = "requests"
+
+        # Ako smo našli stvarnu live procjenu,
+        # nema razloga paliti Chromium.
+        if parsed.get("available"):
+            return parsed
+
+        raise RuntimeError(
+            parsed.get("error")
+            or "Granica.rs HTTP parser nije našao live podatak"
+        )
+
+    def _ensure_browser(self) -> None:
+        if self._browser is not None:
+            return
+
+        self._playwright = sync_playwright().start()
+
+        self._browser = (
+            self._playwright.chromium.launch(
+                headless=True,
+                args=[
+                    "--no-sandbox",
+                    "--disable-dev-shm-usage",
+                ],
+            )
+        )
+
+        self._context = (
+            self._browser.new_context(
+                locale="sr-RS",
+                user_agent=HEADERS["User-Agent"],
+                extra_http_headers={
+                    "Cache-Control":
+                        "no-cache, no-store, max-age=0",
+                    "Pragma": "no-cache",
+                },
+            )
+        )
+
+    def _browser_fetch(
+        self,
+        url: str,
+        expected_direction_text: str,
+    ) -> dict:
+        self._ensure_browser()
+
+        page = self._context.new_page()
 
         try:
             page.goto(
-                url,
+                self._cache_bust_url(url),
                 wait_until="domcontentloaded",
                 timeout=30000,
             )
 
-            # Daj stranici vremena da završi live prikaz.
-            page.wait_for_timeout(5000)
+            # Chromium je sada fallback, pa kratko čekanje
+            # ne usporava normalni requests put.
+            page.wait_for_timeout(3000)
 
-            # Ako mreža utihne brzo, dodatno je sačekaj,
-            # ali ne ruši workflow ako ne utihne.
-            try:
-                page.wait_for_load_state(
-                    "networkidle",
-                    timeout=7000,
-                )
-            except Exception:
-                pass
-
-            body_text = page.locator("body").inner_text()
+            body_text = page.locator(
+                "body"
+            ).inner_text()
 
             parsed = granica_rs_parse_rendered(
                 body_text,
@@ -1045,14 +1161,16 @@ def fetch_granica_rs_page(
                 url,
             )
 
-            # Granica.rs prikazuje posljednji kadar javne kamere.
-            # Na svakoj smjernoj stranici prvi snapshot pripada
-            # glavnom smjeru te stranice.
             try:
-                images = page.locator("img").evaluate_all(
+                images = page.locator(
+                    "img"
+                ).evaluate_all(
                     """
                     imgs => imgs.map(img => ({
-                      src: img.currentSrc || img.src || img.dataset.src || '',
+                      src: img.currentSrc ||
+                           img.src ||
+                           img.dataset.src ||
+                           '',
                       alt: img.alt || ''
                     }))
                     """
@@ -1060,15 +1178,21 @@ def fetch_granica_rs_page(
 
                 snapshot = next(
                     (
-                        item for item in images
-                        if "granicars-snapshots" in item.get("src", "")
+                        item
+                        for item in images
+                        if "granicars-snapshots"
+                        in item.get("src", "")
                     ),
                     None,
                 )
 
                 if snapshot:
-                    parsed["camera_url"] = snapshot.get("src")
-                    parsed["camera_alt"] = snapshot.get("alt")
+                    parsed["camera_url"] = (
+                        snapshot.get("src")
+                    )
+                    parsed["camera_alt"] = (
+                        snapshot.get("alt")
+                    )
                 else:
                     parsed["camera_url"] = None
                     parsed["camera_alt"] = None
@@ -1076,12 +1200,122 @@ def fetch_granica_rs_page(
                 parsed["camera_url"] = None
                 parsed["camera_alt"] = None
 
+            parsed["transport"] = "browser"
+            parsed["rendered_with_browser"] = True
+
             return parsed
+
         finally:
-            browser.close()
+            page.close()
+
+    def fetch(
+        self,
+        url: str,
+        expected_direction_text: str,
+    ) -> dict:
+        key = (
+            url,
+            expected_direction_text,
+        )
+
+        cached = self.cache.get(key)
+
+        if cached is not None:
+            self.stats["cache_hits"] += 1
+            return dict(cached)
+
+        request_error = None
+
+        try:
+            parsed = self._requests_fetch(
+                url,
+                expected_direction_text,
+            )
+
+            self.stats["requests_ok"] += 1
+            self.cache[key] = dict(parsed)
+            return parsed
+
+        except Exception as exc:
+            request_error = str(exc)
+
+        try:
+            parsed = self._browser_fetch(
+                url,
+                expected_direction_text,
+            )
+
+            self.stats["browser_fallback"] += 1
+
+            if request_error:
+                parsed["requests_error"] = (
+                    request_error
+                )
+
+            self.cache[key] = dict(parsed)
+            return parsed
+
+        except Exception as exc:
+            self.stats["failures"] += 1
+
+            return {
+                "available": False,
+                "label": "Nema podataka",
+                "wait_minutes_min": None,
+                "wait_minutes_max": None,
+                "congestion": None,
+                "observed_at": None,
+                "observed_text": None,
+                "page_url": url,
+                "camera_url": None,
+                "camera_alt": None,
+                "transport": None,
+                "error": (
+                    f"requests={request_error}; "
+                    f"browser={exc}"
+                ),
+            }
+
+    def close(self) -> None:
+        try:
+            if self._context is not None:
+                self._context.close()
+        except Exception:
+            pass
+
+        try:
+            if self._browser is not None:
+                self._browser.close()
+        except Exception:
+            pass
+
+        try:
+            if self._playwright is not None:
+                self._playwright.stop()
+        except Exception:
+            pass
+
+        try:
+            self.session.close()
+        except Exception:
+            pass
 
 
-def fetch_granica_rs_for_crossing(spec: dict) -> dict:
+def fetch_granica_rs_page(
+    fetcher: GranicaRsFetcher,
+    url: str,
+    expected_direction_text: str,
+) -> dict:
+    return fetcher.fetch(
+        url,
+        expected_direction_text,
+    )
+
+
+def fetch_granica_rs_for_crossing(
+    spec: dict,
+    fetcher: GranicaRsFetcher,
+) -> dict:
     urls = spec.get("granica_rs", {})
 
     result = {
@@ -1094,6 +1328,7 @@ def fetch_granica_rs_for_crossing(spec: dict) -> dict:
     try:
         if urls.get("to_bih"):
             result["to_bih"] = fetch_granica_rs_page(
+                fetcher,
                 urls["to_bih"],
                 "Izlaz - ka BiH",
             )
@@ -1108,6 +1343,7 @@ def fetch_granica_rs_for_crossing(spec: dict) -> dict:
     try:
         if urls.get("to_croatia"):
             result["to_croatia"] = fetch_granica_rs_page(
+                fetcher,
                 urls["to_croatia"],
                 "Izlaz - ka Hrvatskoj",
             )
@@ -1204,7 +1440,7 @@ def main() -> int:
             "granica_rs": {
                 "name": "Granica.rs",
                 "url": "https://granica.rs/",
-                "note": "Procjene sa javnih kamera; prošireni HR-BiH prelazi v1",
+                "note": "Procjene sa javnih kamera; optimizovani HTTP-first fetch v1",
             },
         },
         "crossings": {},
@@ -1231,12 +1467,23 @@ def main() -> int:
 
         item["granica_rs"] = fetch_granica_rs_for_crossing(
             spec,
+            granica_fetcher,
         )
 
         result["crossings"][key] = item
 
         if item["available"]:
             found += 1
+
+    granica_fetcher.close()
+
+    print(
+        "Granica.rs fetch statistika: "
+        f"HTTP={granica_fetcher.stats['requests_ok']}; "
+        f"browser_fallback={granica_fetcher.stats['browser_fallback']}; "
+        f"cache_hits={granica_fetcher.stats['cache_hits']}; "
+        f"failures={granica_fetcher.stats['failures']}"
+    )
 
     # HAK više nije "single point of failure".
     # Ako nije pronađen nijedan poznati prijelaz, samo označi
