@@ -559,6 +559,8 @@ def granica_rs_parse_measurement(
             "observed_at": None,
             "observed_text": None,
             "page_url": url,
+            "camera_url": None,
+            "camera_alt": None,
             "error": "Smjerni blok nije pronađen",
         }
 
@@ -620,6 +622,8 @@ def granica_rs_parse_measurement(
             "observed_at": None,
             "observed_text": None,
             "page_url": url,
+            "camera_url": None,
+            "camera_alt": None,
             "error": "Procjena čekanja nije pronađena",
         }
 
@@ -903,11 +907,44 @@ def fetch_granica_rs_page(
 
             body_text = page.locator("body").inner_text()
 
-            return granica_rs_parse_rendered(
+            parsed = granica_rs_parse_rendered(
                 body_text,
                 expected_direction_text,
                 url,
             )
+
+            # Granica.rs prikazuje posljednji kadar javne kamere.
+            # Na svakoj smjernoj stranici prvi snapshot pripada
+            # glavnom smjeru te stranice.
+            try:
+                images = page.locator("img").evaluate_all(
+                    """
+                    imgs => imgs.map(img => ({
+                      src: img.currentSrc || img.src || img.dataset.src || '',
+                      alt: img.alt || ''
+                    }))
+                    """
+                )
+
+                snapshot = next(
+                    (
+                        item for item in images
+                        if "granicars-snapshots" in item.get("src", "")
+                    ),
+                    None,
+                )
+
+                if snapshot:
+                    parsed["camera_url"] = snapshot.get("src")
+                    parsed["camera_alt"] = snapshot.get("alt")
+                else:
+                    parsed["camera_url"] = None
+                    parsed["camera_alt"] = None
+            except Exception:
+                parsed["camera_url"] = None
+                parsed["camera_alt"] = None
+
+            return parsed
         finally:
             browser.close()
 
