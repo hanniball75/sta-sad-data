@@ -4,6 +4,7 @@ import json
 import re
 import sys
 from datetime import datetime, timezone
+from zoneinfo import ZoneInfo
 from pathlib import Path
 from typing import Optional
 
@@ -12,6 +13,7 @@ from bs4 import BeautifulSoup
 
 SOURCE_URL = "https://www.hak.hr/info/stanje-na-cestama/"
 OUTPUT = Path("border_waits.json")
+HAK_TZ = ZoneInfo("Europe/Zagreb")
 
 HEADERS = {
     "User-Agent": (
@@ -91,6 +93,31 @@ def wait_minutes(label: str) -> Optional[int]:
     return None
 
 
+def parse_hak_datetime(value: str) -> Optional[str]:
+    """Pretvori HAK lokalno vrijeme u ISO 8601 s vremenskom zonom."""
+    m = re.search(
+        r"(\d{1,2})\.(\d{1,2})\.(\d{4})\.?\s+"
+        r"(\d{1,2}):(\d{2})(?::(\d{2}))?",
+        value,
+    )
+    if not m:
+        return None
+
+    day, month, year, hour, minute, second = m.groups()
+
+    dt = datetime(
+        int(year),
+        int(month),
+        int(day),
+        int(hour),
+        int(minute),
+        int(second or 0),
+        tzinfo=HAK_TZ,
+    )
+
+    return dt.isoformat(timespec="seconds")
+
+
 def parse_cell(raw: str) -> dict:
     text = clean(raw)
 
@@ -99,23 +126,42 @@ def parse_cell(raw: str) -> dict:
             "label": "Nema podataka",
             "wait_minutes": None,
             "observed_at": None,
+            "observed_text": None,
         }
 
     observed_at = None
+    observed_text = None
 
-    # HAK najčešće ispisuje: "1 h 30 min. T: 28.9.2026. 8:43:02"
-    m = re.search(
-        r"\bT:\s*(\d{1,2}\.\d{1,2}\.\d{4}\.\s+\d{1,2}:\d{2}:\d{2})",
-        text,
-        flags=re.I,
-    )
-    if m:
-        observed_at = clean(m.group(1))
-        label = clean(text[: m.start()])
+    # HAK koristi više varijanti:
+    # "2 h T: 28.9.2026. 18:11:23"
+    # "2 h Vrijeme podatka: 28.09.2026 18:11:23"
+    patterns = [
+        r"\bT:\s*(\d{1,2}\.\d{1,2}\.\d{4}\.?\s+\d{1,2}:\d{2}(?::\d{2})?)",
+        r"\bVrijeme\s+podatka:\s*(\d{1,2}\.\d{1,2}\.\d{4}\.?\s+\d{1,2}:\d{2}(?::\d{2})?)",
+    ]
+
+    match = None
+    for pattern in patterns:
+        match = re.search(pattern, text, flags=re.I)
+        if match:
+            break
+
+    if match:
+        observed_text = clean(match.group(1))
+        observed_at = parse_hak_datetime(observed_text)
+        label = clean(text[: match.start()])
     else:
         label = text
 
-    label = label.rstrip(" .;-")
+    # Ako HAK doda "L: 6 km" prije vremena, ne želimo da to postane dio čekanja.
+    label = re.sub(
+        r"\bL:\s*[\d.,]+\s*km\b",
+        "",
+        label,
+        flags=re.I,
+    )
+    label = clean(label).rstrip(" .;-")
+
     if not label:
         label = "Nema podataka"
 
@@ -123,19 +169,22 @@ def parse_cell(raw: str) -> dict:
         "label": label,
         "wait_minutes": wait_minutes(label),
         "observed_at": observed_at,
+        "observed_text": observed_text,
     }
 
 
-def source_timestamp(page_text: str) -> Optional[str]:
-    # U HAK tekstu: "Izvor: MUP (28.09.2026. 10:00)"
+def source_timestamp(page_text: str) -> tuple[Optional[str], Optional[str]]:
+    # HAK tekst npr. "Izvor: MUP (28.09.2026. 10:23)"
     matches = re.findall(
-        r"Izvor:\s*MUP\s*\((\d{1,2}\.\d{1,2}\.\d{4}\.\s+\d{1,2}:\d{2})\)",
+        r"Izvor:\s*MUP\s*\((\d{1,2}\.\d{1,2}\.\d{4}\.?\s+\d{1,2}:\d{2}(?::\d{2})?)\)",
         page_text,
         flags=re.I,
     )
-    if matches:
-        return clean(matches[-1])
-    return None
+    if not matches:
+        return None, None
+
+    raw = clean(matches[-1])
+    return raw, parse_hak_datetime(raw)
 
 
 def row_for_aliases(soup: BeautifulSoup, aliases: list[str]):
@@ -166,11 +215,13 @@ def parse_crossing(soup: BeautifulSoup, spec: dict) -> dict:
                 "label": "Nema podataka",
                 "wait_minutes": None,
                 "observed_at": None,
+                "observed_text": None,
             },
             "to_croatia": {
                 "label": "Nema podataka",
                 "wait_minutes": None,
                 "observed_at": None,
+                "observed_text": None,
             },
         }
 
@@ -215,8 +266,10 @@ def main() -> int:
     soup = BeautifulSoup(response.text, "html.parser")
     page_text = clean(soup.get_text(" ", strip=True))
 
+    source_updated, source_updated_at = source_timestamp(page_text)
+
     result = {
-        "schema_version": 1,
+        "schema_version": 2,
         "generated_at": datetime.now(timezone.utc)
         .replace(microsecond=0)
         .isoformat()
@@ -224,7 +277,8 @@ def main() -> int:
         "source": {
             "name": "HAK / MUP RH",
             "url": SOURCE_URL,
-            "source_updated": source_timestamp(page_text),
+            "source_updated": source_updated,
+            "source_updated_at": source_updated_at,
         },
         "crossings": {},
     }
