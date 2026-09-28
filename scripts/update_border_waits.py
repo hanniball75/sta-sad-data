@@ -1448,6 +1448,9 @@ def main() -> int:
 
     found = 0
 
+    # Jedan zajednički Granica.rs fetcher za sve prelaze.
+    granica_fetcher = GranicaRsFetcher()
+
     for key, spec in CROSSINGS.items():
         item = parse_crossing(soup, spec)
 
