@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "generated_at": null,
+  "generated_at": "2026-09-28T19:02:29Z",
   "source": {
     "name": "HAK / MUP RH",
     "url": "https://www.hak.hr/info/stanje-na-cestama/",
-    "source_updated": null
+    "source_updated": "28.09.2026. 19:23"
   },
   "crossings": {
     "gornji_varos_gradiska": {
@@ -40,10 +40,10 @@
     "svilaj": {
       "name": "Svilaj",
       "hak_name": "Svilaj",
-      "available": false,
+      "available": true,
       "to_bih": {
-        "label": "Nema podataka",
-        "wait_minutes": null,
+        "label": "2 h T: 28.09.2026 18:11:23",
+        "wait_minutes": 120,
         "observed_at": null
       },
       "to_croatia": {
