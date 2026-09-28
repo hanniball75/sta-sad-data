@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-09-28T19:47:27Z",
+  "generated_at": "2026-09-28T20:06:53Z",
   "source": {
     "name": "HAK / MUP RH",
     "url": "https://www.hak.hr/info/stanje-na-cestama/",
@@ -19,6 +19,11 @@
       "url": "https://bihamk.ba/spi/stanje-na-cesti-u-bih/granicni-prijelazi",
       "source_updated": "28.09.2026. u 20:08",
       "source_updated_at": "2026-09-28T20:08:00+02:00"
+    },
+    "granica_rs": {
+      "name": "Granica.rs",
+      "url": "https://granica.rs/",
+      "note": "Procjene sa javnih kamera; dodatni izvor"
     }
   },
   "crossings": {
@@ -47,6 +52,32 @@
         "observed_at": "2026-09-28T20:08:00+02:00",
         "observed_text": "28.09.2026. u 20:08",
         "raw_text": "Privremeno je za saobraćaj motornih vozila otvoren novi granični prelaz Gradiška/Gornji Varoš. Zadržavanja putničkih vozila nisu duža od 30 minuta."
+      },
+      "granica_rs": {
+        "source": "Granica.rs",
+        "to_bih": {
+          "available": true,
+          "label": "10-20 min",
+          "wait_minutes_min": 10,
+          "wait_minutes_max": 20,
+          "congestion": "Srednja gužva",
+          "observed_at": "2026-09-28T20:01:00+02:00",
+          "observed_text": "28.09.2026. 20:01",
+          "page_url": "https://granica.rs/prelaz/hr-gornji-varos",
+          "error": null
+        },
+        "to_croatia": {
+          "available": true,
+          "label": "do 5 min",
+          "wait_minutes_min": 0,
+          "wait_minutes_max": 5,
+          "congestion": "Nema gužve",
+          "observed_at": "2026-09-28T20:00:00+02:00",
+          "observed_text": "28.09.2026. 20:00",
+          "page_url": "https://granica.rs/prelaz/ba-gradiska",
+          "error": null
+        },
+        "error": null
       }
     },
     "slavonski_brod_brod": {
@@ -74,6 +105,32 @@
         "observed_at": "2026-09-28T20:08:00+02:00",
         "observed_text": "28.09.2026. u 20:08",
         "raw_text": "Zadržavanja putničkih vozila nisu duža od 30 minuta."
+      },
+      "granica_rs": {
+        "source": "Granica.rs",
+        "to_bih": {
+          "available": true,
+          "label": "do 5 min",
+          "wait_minutes_min": 0,
+          "wait_minutes_max": 5,
+          "congestion": "Nema gužve",
+          "observed_at": "2026-09-28T20:01:00+02:00",
+          "observed_text": "28.09.2026. 20:01",
+          "page_url": "https://granica.rs/prelaz/hr-slavonski-brod",
+          "error": null
+        },
+        "to_croatia": {
+          "available": true,
+          "label": "do 5 min",
+          "wait_minutes_min": 0,
+          "wait_minutes_max": 5,
+          "congestion": "Nema gužve",
+          "observed_at": "2026-09-28T20:00:00+02:00",
+          "observed_text": "28.09.2026. 20:00",
+          "page_url": "https://granica.rs/prelaz/ba-brod",
+          "error": null
+        },
+        "error": null
       }
     },
     "svilaj": {
@@ -84,7 +141,7 @@
         "label": "2 h",
         "wait_minutes": 120,
         "observed_at": "2026-09-28T18:11:23+02:00",
-        "observed_text": "28.9.2026. 18:11:23"
+        "observed_text": "28.09.2026 18:11:23"
       },
       "to_croatia": {
         "label": "Nema podataka",
@@ -101,6 +158,32 @@
         "observed_at": "2026-09-28T20:08:00+02:00",
         "observed_text": "28.09.2026. u 20:08",
         "raw_text": "Zadržavanja putničkih vozila nisu duža od 30 minuta."
+      },
+      "granica_rs": {
+        "source": "Granica.rs",
+        "to_bih": {
+          "available": true,
+          "label": "do 5 min",
+          "wait_minutes_min": 0,
+          "wait_minutes_max": 5,
+          "congestion": "Nema gužve",
+          "observed_at": "2026-09-28T20:01:00+02:00",
+          "observed_text": "28.09.2026. 20:01",
+          "page_url": "https://granica.rs/prelaz/hr-svilaj",
+          "error": null
+        },
+        "to_croatia": {
+          "available": true,
+          "label": "do 5 min",
+          "wait_minutes_min": 0,
+          "wait_minutes_max": 5,
+          "congestion": "Nema gužve",
+          "observed_at": "2026-09-28T20:01:00+02:00",
+          "observed_text": "28.09.2026. 20:01",
+          "page_url": "https://granica.rs/prelaz/ba-svilaj",
+          "error": null
+        },
+        "error": null
       }
     },
     "zupanja_orasje": {
@@ -128,6 +211,27 @@
         "observed_at": "2026-09-28T20:08:00+02:00",
         "observed_text": "28.09.2026. u 20:08",
         "raw_text": "Zadržavanja putničkih vozila nisu duža od 30 minuta."
+      },
+      "granica_rs": {
+        "source": "Granica.rs",
+        "to_bih": {
+          "available": true,
+          "label": "do 5 min",
+          "wait_minutes_min": 0,
+          "wait_minutes_max": 5,
+          "congestion": "Nema gužve",
+          "observed_at": "2026-09-28T20:01:00+02:00",
+          "observed_text": "28.09.2026. 20:01",
+          "page_url": "https://granica.rs/prelaz/hr-zupanja",
+          "error": null
+        },
+        "to_croatia": {
+          "available": false,
+          "label": "Nema podataka",
+          "page_url": "https://granica.rs/prelaz/ba-orasje",
+          "error": "404 Client Error: Not Found for url: https://granica.rs/prelaz/ba-orasje"
+        },
+        "error": null
       }
     }
   }
