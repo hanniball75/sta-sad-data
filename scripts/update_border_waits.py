@@ -73,6 +73,53 @@ CROSSINGS = {
             "to_croatia": "https://granica.rs/prelaz/ba-orasje",
         },
     },
+    "stara_gradiska_gradiska": {
+        "name": "Stara Gradiška – Gradiška",
+        "aliases": [
+            "Stara Gradiška (Gradiška)",
+            "Stara Gradiška",
+        ],
+        "bihamk_names": [],
+        "granica_rs": {
+            "to_bih": "https://granica.rs/prelaz/hr-stara-gradiska",
+            "to_croatia": "https://granica.rs/prelaz/ba-gradiska",
+        },
+    },
+    "hrvatska_kostajnica_kostajnica": {
+        "name": "Hrvatska Kostajnica – Kostajnica",
+        "aliases": [
+            "Hrvatska Kostajnica (Kostajnica)",
+            "Hrvatska Kostajnica",
+        ],
+        "bihamk_names": ["GP Kostajnica", "Kostajnica"],
+        "granica_rs": {
+            "to_bih": "https://granica.rs/prelaz/hr-hrvatska-kostajnica",
+            "to_croatia": "https://granica.rs/prelaz/ba-kostajnica",
+        },
+    },
+    "slavonski_samac_samac": {
+        "name": "Slavonski Šamac – Šamac",
+        "aliases": [
+            "Slavonski Šamac (Šamac)",
+            "Slavonski Šamac",
+        ],
+        "bihamk_names": ["GP Šamac", "Šamac"],
+        "granica_rs": {
+            "to_bih": "https://granica.rs/prelaz/hr-slavonski-samac",
+            "to_croatia": "https://granica.rs/prelaz/ba-samac",
+        },
+    },
+    "gunja_brcko": {
+        "name": "Gunja – Brčko",
+        "aliases": [
+            "Gunja (Brčko)",
+            "Gunja",
+        ],
+        "bihamk_names": ["GP Brčko", "Brčko"],
+        "granica_rs": {
+            "to_bih": "https://granica.rs/prelaz/hr-gunja",
+        },
+    },
 }
 
 
@@ -1157,7 +1204,7 @@ def main() -> int:
             "granica_rs": {
                 "name": "Granica.rs",
                 "url": "https://granica.rs/",
-                "note": "Procjene sa javnih kamera; parser ignoriše relativnu starost mjerenja",
+                "note": "Procjene sa javnih kamera; prošireni HR-BiH prelazi v1",
             },
         },
         "crossings": {},
