@@ -1,18 +1,20 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-09-28T20:41:45Z",
+  "generated_at": "2026-09-28T21:24:47Z",
   "source": {
     "name": "HAK / MUP RH",
     "url": "https://www.hak.hr/info/stanje-na-cestama/",
     "source_updated": "28.09.2026. 19:23",
-    "source_updated_at": "2026-09-28T19:23:00+02:00"
+    "source_updated_at": "2026-09-28T19:23:00+02:00",
+    "error": "HAK trenutno nije vratio nijedan poznati BiH granični prijelaz. Nastavljam sa BIHAMK i Granica.rs."
   },
   "sources": {
     "hak": {
       "name": "HAK / MUP RH",
       "url": "https://www.hak.hr/info/stanje-na-cestama/",
       "source_updated": "28.09.2026. 19:23",
-      "source_updated_at": "2026-09-28T19:23:00+02:00"
+      "source_updated_at": "2026-09-28T19:23:00+02:00",
+      "error": "HAK trenutno nije vratio nijedan poznati BiH granični prijelaz. Nastavljam sa BIHAMK i Granica.rs."
     },
     "bihamk": {
       "name": "BIHAMK",
@@ -61,11 +63,13 @@
           "wait_minutes_min": 0,
           "wait_minutes_max": 5,
           "congestion": "Nema gužve",
-          "observed_at": "2026-09-28T22:30:50+02:00",
-          "observed_text": "pre 11 min",
+          "observed_at": "2026-09-28T23:01:56+02:00",
+          "observed_text": "pre 23 min",
           "page_url": "https://granica.rs/prelaz/hr-gornji-varos",
           "rendered_with_browser": true,
-          "error": null
+          "error": null,
+          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-gornji-varos-1/2026-09-28/210125.jpg",
+          "camera_alt": ""
         },
         "to_croatia": {
           "available": true,
@@ -73,11 +77,13 @@
           "wait_minutes_min": 0,
           "wait_minutes_max": 5,
           "congestion": "Nema gužve",
-          "observed_at": "2026-09-28T22:30:54+02:00",
-          "observed_text": "pre 11 min",
+          "observed_at": "2026-09-28T23:01:00+02:00",
+          "observed_text": "pre 24 min",
           "page_url": "https://granica.rs/prelaz/ba-gradiska",
           "rendered_with_browser": true,
-          "error": null
+          "error": null,
+          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/ams-gradiska-exit/2026-09-28/210103.jpg",
+          "camera_alt": ""
         },
         "error": null
       }
@@ -116,11 +122,13 @@
           "wait_minutes_min": 0,
           "wait_minutes_max": 10,
           "congestion": "Mala gužva",
-          "observed_at": "2026-09-28T22:30:59+02:00",
-          "observed_text": "pre 11 min",
+          "observed_at": "2026-09-28T23:01:05+02:00",
+          "observed_text": "pre 24 min",
           "page_url": "https://granica.rs/prelaz/hr-slavonski-brod",
           "rendered_with_browser": true,
-          "error": null
+          "error": null,
+          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-bosanski-brod-exit/2026-09-28/210122.jpg",
+          "camera_alt": ""
         },
         "to_croatia": {
           "available": true,
@@ -128,11 +136,13 @@
           "wait_minutes_min": 0,
           "wait_minutes_max": 5,
           "congestion": "Nema gužve",
-          "observed_at": "2026-09-28T22:31:05+02:00",
-          "observed_text": "pre 11 min",
+          "observed_at": "2026-09-28T23:01:10+02:00",
+          "observed_text": "pre 24 min",
           "page_url": "https://granica.rs/prelaz/ba-brod",
           "rendered_with_browser": true,
-          "error": null
+          "error": null,
+          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/ams-brod-exit/2026-09-28/210105.jpg",
+          "camera_alt": ""
         },
         "error": null
       }
@@ -140,12 +150,12 @@
     "svilaj": {
       "name": "Svilaj",
       "hak_name": "Svilaj",
-      "available": true,
+      "available": false,
       "to_bih": {
-        "label": "2 h",
-        "wait_minutes": 120,
-        "observed_at": "2026-09-28T18:11:23+02:00",
-        "observed_text": "28.09.2026 18:11:23"
+        "label": "Nema podataka",
+        "wait_minutes": null,
+        "observed_at": null,
+        "observed_text": null
       },
       "to_croatia": {
         "label": "Nema podataka",
@@ -171,11 +181,13 @@
           "wait_minutes_min": 0,
           "wait_minutes_max": 5,
           "congestion": "Nema gužve",
-          "observed_at": "2026-09-28T22:31:10+02:00",
-          "observed_text": "pre 11 min",
+          "observed_at": "2026-09-28T23:01:15+02:00",
+          "observed_text": "pre 24 min",
           "page_url": "https://granica.rs/prelaz/hr-svilaj",
           "rendered_with_browser": true,
-          "error": null
+          "error": null,
+          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-svilaj-exit/2026-09-28/210120.jpg",
+          "camera_alt": ""
         },
         "to_croatia": {
           "available": true,
@@ -183,11 +195,13 @@
           "wait_minutes_min": 0,
           "wait_minutes_max": 5,
           "congestion": "Nema gužve",
-          "observed_at": "2026-09-28T22:31:14+02:00",
-          "observed_text": "pre 11 min",
+          "observed_at": "2026-09-28T23:01:19+02:00",
+          "observed_text": "pre 24 min",
           "page_url": "https://granica.rs/prelaz/ba-svilaj",
           "rendered_with_browser": true,
-          "error": null
+          "error": null,
+          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/ams-svilaj-exit/2026-09-28/210115.jpg",
+          "camera_alt": ""
         },
         "error": null
       }
@@ -226,11 +240,13 @@
           "wait_minutes_min": 0,
           "wait_minutes_max": 5,
           "congestion": "Nema gužve",
-          "observed_at": "2026-09-28T22:31:19+02:00",
-          "observed_text": "pre 11 min",
+          "observed_at": "2026-09-28T23:01:24+02:00",
+          "observed_text": "pre 24 min",
           "page_url": "https://granica.rs/prelaz/hr-zupanja",
           "rendered_with_browser": true,
-          "error": null
+          "error": null,
+          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-zupanja-exit/2026-09-28/210118.jpg",
+          "camera_alt": ""
         },
         "to_croatia": {
           "available": false,
@@ -241,6 +257,8 @@
           "observed_at": null,
           "observed_text": null,
           "page_url": "https://granica.rs/prelaz/ba-orasje",
+          "camera_url": null,
+          "camera_alt": null,
           "error": "Smjerni blok nije pronađen"
         },
         "error": null
