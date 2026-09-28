@@ -120,6 +120,130 @@ CROSSINGS = {
             "to_bih": "https://granica.rs/prelaz/hr-gunja",
         },
     },
+    "kamensko": {
+        "name": "Kamensko",
+        "aliases": [
+            "Kamensko",
+        ],
+        "bihamk_names": ["GP Kamensko", "Kamensko"],
+        "granica_rs": {
+            "to_bih": {
+                "url": "https://granica.rs/prelaz/hr-kamensko",
+                "direction": "Izlaz - ka BiH",
+            },
+            "to_croatia": {
+                "url": "https://granica.rs/prelaz/hr-kamensko",
+                "direction": "Ulaz - ka Hrvatskoj",
+            },
+        },
+    },
+    "arzano": {
+        "name": "Aržano",
+        "aliases": [
+            "Aržano",
+        ],
+        "bihamk_names": ["GP Aržano", "Aržano"],
+        "granica_rs": {
+            "to_bih": {
+                "url": "https://granica.rs/prelaz/hr-arzano",
+                "direction": "Izlaz - ka BiH",
+            },
+            "to_croatia": {
+                "url": "https://granica.rs/prelaz/hr-arzano",
+                "direction": "Ulaz - ka Hrvatskoj",
+            },
+        },
+    },
+    "nova_sela_bijaca": {
+        "name": "Nova Sela – Bijača",
+        "aliases": [
+            "Nova Sela (Bijača)",
+            "Nova Sela",
+        ],
+        "bihamk_names": ["GP Bijača", "Bijača"],
+        "granica_rs": {
+            "to_bih": {
+                "url": "https://granica.rs/prelaz/hr-nova-sela-bijaca",
+                "direction": "Izlaz - ka BiH",
+            },
+            "to_croatia": {
+                "url": "https://granica.rs/prelaz/hr-nova-sela-bijaca",
+                "direction": "Ulaz - ka Hrvatskoj",
+            },
+        },
+    },
+    "metkovic_doljani": {
+        "name": "Metković – Doljani",
+        "aliases": [
+            "Metković (Doljani)",
+            "Metković",
+        ],
+        "bihamk_names": ["GP Doljani", "Doljani"],
+        "granica_rs": {
+            "to_bih": {
+                "url": "https://granica.rs/prelaz/hr-metkovic",
+                "direction": "Izlaz - ka BiH",
+            },
+            "to_croatia": {
+                "url": "https://granica.rs/prelaz/hr-metkovic",
+                "direction": "Ulaz - ka Hrvatskoj",
+            },
+        },
+    },
+    "klek_neum": {
+        "name": "Klek – Neum",
+        "aliases": [
+            "Klek (Neum)",
+            "Klek",
+        ],
+        "bihamk_names": ["GP Neum I", "Neum I", "Klek"],
+        "granica_rs": {
+            "to_bih": {
+                "url": "https://granica.rs/prelaz/hr-klek-neum",
+                "direction": "Izlaz - ka BiH",
+            },
+            "to_croatia": {
+                "url": "https://granica.rs/prelaz/hr-klek-neum",
+                "direction": "Ulaz - ka Hrvatskoj",
+            },
+        },
+    },
+    "zaton_doli_neum": {
+        "name": "Zaton Doli – Neum",
+        "aliases": [
+            "Zaton Doli (Neum)",
+            "Zaton Doli",
+        ],
+        "bihamk_names": ["GP Neum II", "Neum II", "Zaton Doli"],
+        "granica_rs": {
+            "to_bih": {
+                "url": "https://granica.rs/prelaz/hr-zaton-doli-neum",
+                "direction": "Izlaz - ka BiH",
+            },
+            "to_croatia": {
+                "url": "https://granica.rs/prelaz/hr-zaton-doli-neum",
+                "direction": "Ulaz - ka Hrvatskoj",
+            },
+        },
+    },
+    "brgat_ivanica": {
+        "name": "Brgat – Ivanica",
+        "aliases": [
+            "Brgat (Ivanica)",
+            "Brgat",
+        ],
+        "bihamk_names": ["GP Ivanica", "Ivanica"],
+        "granica_rs": {
+            "to_bih": {
+                "url": "https://granica.rs/prelaz/hr-brgat",
+                "direction": "Izlaz - ka BiH",
+            },
+            "to_croatia": {
+                "url": "https://granica.rs/prelaz/hr-brgat",
+                "direction": "Ulaz - ka Hrvatskoj",
+            },
+        },
+    },
 }
 
 
@@ -844,21 +968,77 @@ def granica_rs_parse_rendered(
         parsed["rendered_with_browser"] = True
         return parsed
 
-    # Novi Granica.rs prikaz može izgledati:
+    # Novi Granica.rs prikaz može imati više smjerova na istoj stranici.
+    # Zato prvo pokušavamo ograničiti tekst na traženi smjer.
     #
-    # ČEKANJE · IZLAZ IZ HRVATSKE
-    # 10
-    # min
-    # Mala gužva
-    # 1 vozilo u koloni
-    # poslednje merenje
-    # pre 4 min
-    #
-    # clean() spaja novi red pa dobijamo "10 min".
+    # Primjeri:
+    # - "ČEKANJE · IZLAZ IZ HRVATSKE"  -> prema BiH
+    # - "ČEKANJE · ULAZ U HRVATSKU"    -> prema Hrvatskoj
+    # - "ČEKANJE · IZLAZ IZ BIH"       -> prema Hrvatskoj sa BiH strane
+    direction_norm = normalize(expected_direction_text)
+
+    if "izlaz - ka bih" in direction_norm:
+        anchors = [
+            "cekanje · izlaz iz hrvatske",
+            "cekanje - izlaz iz hrvatske",
+            "izlaz iz hrvatske",
+            "izlaz - ka bih",
+        ]
+    elif "ulaz - ka hrvatskoj" in direction_norm:
+        anchors = [
+            "cekanje · ulaz u hrvatsku",
+            "cekanje - ulaz u hrvatsku",
+            "ulaz u hrvatsku",
+            "ulaz - ka hrvatskoj",
+        ]
+    elif "izlaz - ka hrvatskoj" in direction_norm:
+        anchors = [
+            "cekanje · izlaz iz bih",
+            "cekanje - izlaz iz bih",
+            "izlaz iz bih",
+            "izlaz - ka hrvatskoj",
+        ]
+    else:
+        anchors = [direction_norm]
+
+    scoped_normalized = normalized
+
+    anchor_pos = None
+    for anchor in anchors:
+        pos = normalized.find(normalize(anchor))
+        if pos >= 0:
+            anchor_pos = pos
+            break
+
+    if anchor_pos is not None:
+        rest = normalized[anchor_pos:]
+
+        # Sljedeća kartica/smjer ili FAQ završava trenutni live blok.
+        cut_candidates = []
+        for token in [
+            "cekanje · izlaz iz hrvatske",
+            "cekanje - izlaz iz hrvatske",
+            "cekanje · ulaz u hrvatsku",
+            "cekanje - ulaz u hrvatsku",
+            "cekanje · izlaz iz bih",
+            "cekanje - izlaz iz bih",
+            "izlaz - ka bih",
+            "ulaz - ka hrvatskoj",
+            "izlaz - ka hrvatskoj",
+            "cesta pitanja",
+        ]:
+            token_norm = normalize(token)
+            pos = rest.find(token_norm, 1)
+            if pos > 0:
+                cut_candidates.append(pos)
+
+        if cut_candidates:
+            rest = rest[:min(cut_candidates)]
+
+        scoped_normalized = rest
+
     # Na novom Granica.rs prikazu "poslednje merenje pre 16 min"
-    # može stajati prije same procjene čekanja. Zato NE uzimamo prvi
-    # broj koji završava na "min", nego preskačemo sve kandidate koji
-    # su dio izraza "pre X min".
+    # može stajati prije same procjene čekanja. Zato NE uzimamo "pre X min".
     wait_match = None
 
     candidate_pattern = re.compile(
@@ -871,8 +1051,8 @@ def granica_rs_parse_rendered(
         flags=re.I,
     )
 
-    for candidate_match in candidate_pattern.finditer(normalized):
-        before = normalized[
+    for candidate_match in candidate_pattern.finditer(scoped_normalized):
+        before = scoped_normalized[
             max(0, candidate_match.start() - 40):
             candidate_match.start()
         ]
@@ -952,7 +1132,7 @@ def granica_rs_parse_rendered(
         "Srednja gužva",
         "Velika gužva",
     ]:
-        if normalize(candidate) in normalized:
+        if normalize(candidate) in scoped_normalized:
             congestion = candidate
             break
 
@@ -1016,6 +1196,7 @@ class GranicaRsFetcher:
         )
 
         self.cache: dict[tuple[str, str], dict] = {}
+        self.page_cache: dict[str, str] = {}
 
         self._playwright = None
         self._browser = None
@@ -1027,6 +1208,7 @@ class GranicaRsFetcher:
             "browser_retry": 0,
             "http_fallback": 0,
             "cache_hits": 0,
+            "page_cache_hits": 0,
             "failures": 0,
         }
 
@@ -1156,6 +1338,24 @@ class GranicaRsFetcher:
     ) -> dict:
         self._ensure_browser()
 
+        # Ako smo istu stranicu već učitali za drugi smjer,
+        # ne navigiramo ponovo. Samo ponovo parsiramo spremljeni DOM tekst.
+        cached_text = self.page_cache.get(url)
+
+        if cached_text is not None:
+            self.stats["page_cache_hits"] += 1
+
+            parsed = granica_rs_parse_rendered(
+                cached_text,
+                expected_direction_text,
+                url,
+            )
+            parsed["camera_url"] = None
+            parsed["camera_alt"] = None
+            parsed["transport"] = "browser_page_cache"
+            parsed["rendered_with_browser"] = True
+            return parsed
+
         self._page.goto(
             self._cache_bust_url(url),
             wait_until="domcontentloaded",
@@ -1170,18 +1370,26 @@ class GranicaRsFetcher:
             expected_direction_text,
         )
 
-        if self._is_fresh_measurement(parsed):
-            return parsed
+        if not self._is_fresh_measurement(parsed):
+            # Ako je prvi DOM još pokazao server-renderovanu/staru vrijednost,
+            # sačekaj JS update pa pročitaj ISTU stranicu ponovo.
+            self.stats["browser_retry"] += 1
+            self._page.wait_for_timeout(2800)
 
-        # Ako je prvi DOM još pokazao server-renderovanu/staru vrijednost,
-        # sačekaj JS update pa pročitaj ISTU stranicu ponovo.
-        self.stats["browser_retry"] += 1
-        self._page.wait_for_timeout(2800)
+            parsed = self._read_browser_dom(
+                url,
+                expected_direction_text,
+            )
 
-        return self._read_browser_dom(
-            url,
-            expected_direction_text,
-        )
+        # Spremi finalni renderovani tekst stranice.
+        try:
+            self.page_cache[url] = self._page.locator(
+                "body"
+            ).inner_text()
+        except Exception:
+            pass
+
+        return parsed
 
     def _requests_fallback(
         self,
@@ -1330,6 +1538,25 @@ def fetch_granica_rs_page(
     )
 
 
+def _granica_target(
+    value,
+    default_direction: str,
+) -> tuple[Optional[str], str]:
+    if not value:
+        return None, default_direction
+
+    if isinstance(value, str):
+        return value, default_direction
+
+    if isinstance(value, dict):
+        return (
+            value.get("url"),
+            value.get("direction") or default_direction,
+        )
+
+    return None, default_direction
+
+
 def fetch_granica_rs_for_crossing(
     spec: dict,
     fetcher: GranicaRsFetcher,
@@ -1343,33 +1570,43 @@ def fetch_granica_rs_for_crossing(
         "error": None,
     }
 
+    to_bih_url, to_bih_direction = _granica_target(
+        urls.get("to_bih"),
+        "Izlaz - ka BiH",
+    )
+
+    to_hr_url, to_hr_direction = _granica_target(
+        urls.get("to_croatia"),
+        "Izlaz - ka Hrvatskoj",
+    )
+
     try:
-        if urls.get("to_bih"):
+        if to_bih_url:
             result["to_bih"] = fetch_granica_rs_page(
                 fetcher,
-                urls["to_bih"],
-                "Izlaz - ka BiH",
+                to_bih_url,
+                to_bih_direction,
             )
     except Exception as exc:
         result["to_bih"] = {
             "available": False,
             "label": "Nema podataka",
-            "page_url": urls.get("to_bih"),
+            "page_url": to_bih_url,
             "error": str(exc),
         }
 
     try:
-        if urls.get("to_croatia"):
+        if to_hr_url:
             result["to_croatia"] = fetch_granica_rs_page(
                 fetcher,
-                urls["to_croatia"],
-                "Izlaz - ka Hrvatskoj",
+                to_hr_url,
+                to_hr_direction,
             )
     except Exception as exc:
         result["to_croatia"] = {
             "available": False,
             "label": "Nema podataka",
-            "page_url": urls.get("to_croatia"),
+            "page_url": to_hr_url,
             "error": str(exc),
         }
 
@@ -1458,7 +1695,7 @@ def main() -> int:
             "granica_rs": {
                 "name": "Granica.rs",
                 "url": "https://granica.rs/",
-                "note": "Procjene sa javnih kamera; shared Chromium live fetch v2",
+                "note": "Procjene sa javnih kamera; 15 HR-BiH prelaza + shared page cache v3",
             },
         },
         "crossings": {},
@@ -1504,6 +1741,7 @@ def main() -> int:
         f"browser_retry={granica_fetcher.stats['browser_retry']}; "
         f"http_fallback={granica_fetcher.stats['http_fallback']}; "
         f"cache_hits={granica_fetcher.stats['cache_hits']}; "
+        f"page_cache_hits={granica_fetcher.stats['page_cache_hits']}; "
         f"failures={granica_fetcher.stats['failures']}"
     )
 
