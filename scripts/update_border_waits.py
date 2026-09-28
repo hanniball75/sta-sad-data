@@ -991,20 +991,43 @@ def fetch_granica_rs_for_crossing(spec: dict) -> dict:
 
 
 def main() -> int:
-    response = requests.get(
-        SOURCE_URL,
-        headers=HEADERS,
-        timeout=25,
-    )
-    response.raise_for_status()
+    # HAK je samo jedan od više nezavisnih izvora.
+    # Ako privremeno padne ili promijeni HTML, ne smijemo
+    # srušiti BIHAMK + Granica.rs + kamere.
+    soup = BeautifulSoup("", "html.parser")
+    page_text = ""
+    source_updated = None
+    source_updated_at = None
+    hak_error = None
 
-    # requests ponekad pogrešno zaključi encoding; HAK je UTF-8.
-    response.encoding = response.apparent_encoding or "utf-8"
+    try:
+        response = requests.get(
+            SOURCE_URL,
+            headers=HEADERS,
+            timeout=25,
+        )
+        response.raise_for_status()
 
-    soup = BeautifulSoup(response.text, "html.parser")
-    page_text = clean(soup.get_text(" ", strip=True))
+        # requests ponekad pogrešno zaključi encoding; HAK je UTF-8.
+        response.encoding = response.apparent_encoding or "utf-8"
 
-    source_updated, source_updated_at = source_timestamp(page_text)
+        soup = BeautifulSoup(
+            response.text,
+            "html.parser",
+        )
+        page_text = clean(
+            soup.get_text(" ", strip=True)
+        )
+
+        source_updated, source_updated_at = (
+            source_timestamp(page_text)
+        )
+    except Exception as exc:
+        hak_error = str(exc)
+        print(
+            f"UPOZORENJE HAK: {exc}",
+            file=sys.stderr,
+        )
 
     # BIHAMK je drugi, nezavisni izvor.
     # Ako BIHAMK privremeno padne, HAK feed i dalje ostaje upotrebljiv.
@@ -1035,6 +1058,7 @@ def main() -> int:
             "url": SOURCE_URL,
             "source_updated": source_updated,
             "source_updated_at": source_updated_at,
+            "error": hak_error,
         },
         "sources": {
             "hak": {
@@ -1042,6 +1066,7 @@ def main() -> int:
                 "url": SOURCE_URL,
                 "source_updated": source_updated,
                 "source_updated_at": source_updated_at,
+                "error": hak_error,
             },
             "bihamk": bihamk_source,
             "granica_rs": {
@@ -1081,12 +1106,23 @@ def main() -> int:
         if item["available"]:
             found += 1
 
-    # Zaštita od toga da HAK potpuno promijeni HTML, a mi ipak
-    # commitamo prazan/krivi JSON kao da je ispravan.
+    # HAK više nije "single point of failure".
+    # Ako nije pronađen nijedan poznati prijelaz, samo označi
+    # izvor kao privremeno nedostupan / promijenjen HTML.
     if found == 0:
-        raise RuntimeError(
-            "Nije pronađen nijedan poznati BiH granični prijelaz "
-            "u HAK tablici. HTML se možda promijenio."
+        message = (
+            "HAK trenutno nije vratio nijedan poznati BiH "
+            "granični prijelaz. Nastavljam sa BIHAMK i Granica.rs."
+        )
+
+        if hak_error is None:
+            hak_error = message
+            result["source"]["error"] = hak_error
+            result["sources"]["hak"]["error"] = hak_error
+
+        print(
+            f"UPOZORENJE HAK: {message}",
+            file=sys.stderr,
         )
 
     OUTPUT.write_text(
@@ -1094,10 +1130,16 @@ def main() -> int:
         encoding="utf-8",
     )
 
-    print(
-        f"HAK/MUP podaci učitani. "
-        f"Pronađeno prijelaza: {found}/{len(CROSSINGS)}"
-    )
+    if found > 0:
+        print(
+            f"HAK/MUP podaci učitani. "
+            f"Pronađeno prijelaza: {found}/{len(CROSSINGS)}"
+        )
+    else:
+        print(
+            "HAK/MUP trenutno bez upotrebljivih prijelaza; "
+            "BIHAMK i Granica.rs se ipak obrađuju."
+        )
 
     for key, item in result["crossings"].items():
         bihamk = item.get("bihamk", {})
