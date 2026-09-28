@@ -1,26 +1,91 @@
-import json
+import re
 import time
+from datetime import datetime, timezone
 from playwright.sync_api import sync_playwright
 
-URLS = [
+BASE_URLS = [
     "https://granica.rs/prelaz/hr-gornji-varos",
     "https://granica.rs/prelaz/hr-svilaj",
 ]
 
-def short(value, limit=1800):
-    value = str(value)
-    if len(value) <= limit:
-        return value
-    return value[:limit] + "... [truncated]"
+def compact(s):
+    return re.sub(r"\s+", " ", s or "").strip()
+
+def extract_measurement_block(text):
+    lines = [compact(x) for x in text.splitlines() if compact(x)]
+    interesting = []
+
+    for i, line in enumerate(lines):
+        low = line.lower()
+        if (
+            "procena čekanja" in low
+            or "poslednje merenje" in low
+            or "nema gužve" in low
+            or "mala gužva" in low
+            or "velika gužva" in low
+        ):
+            start = max(0, i - 2)
+            end = min(len(lines), i + 3)
+            for item in lines[start:end]:
+                if item not in interesting:
+                    interesting.append(item)
+
+    return interesting[:30]
+
+def dump_headers(resp):
+    headers = resp.headers
+    keys = [
+        "date",
+        "age",
+        "cache-control",
+        "cf-cache-status",
+        "etag",
+        "last-modified",
+        "server",
+        "vary",
+    ]
+    for key in keys:
+        print(f"{key}: {headers.get(key, '<nema>')}")
+
+def load(page, url, label):
+    print("\n" + "=" * 100)
+    print(label)
+    print("LOCAL UTC:", datetime.now(timezone.utc).isoformat())
+    print("URL:", url)
+
+    resp = page.goto(
+        url,
+        wait_until="domcontentloaded",
+        timeout=45000,
+    )
+
+    page.wait_for_timeout(5000)
+
+    if resp:
+        print("STATUS:", resp.status)
+        print("--- RESPONSE HEADERS ---")
+        dump_headers(resp)
+    else:
+        print("NO MAIN DOCUMENT RESPONSE")
+
+    body_text = page.locator("body").inner_text()
+
+    print("--- EXTRACTED LIVE TEXT ---")
+    block = extract_measurement_block(body_text)
+    if block:
+        for line in block:
+            print(line)
+    else:
+        print("Nije pronađen blok mjerenja.")
+
+    print("--- PAGE TITLE ---")
+    print(page.title())
 
 def main():
     with sync_playwright() as p:
         browser = p.chromium.launch(
             headless=True,
-            args=[
-                "--no-sandbox",
-                "--disable-dev-shm-usage",
-            ],
+            args=["--no-sandbox", "--disable-dev-shm-usage"],
         )
 
         context = browser.new_context(
@@ -30,117 +95,28 @@ def main():
                 "AppleWebKit/537.36 (KHTML, like Gecko) "
                 "Chrome/140.0 Safari/537.36"
             ),
+            extra_http_headers={
+                "Cache-Control": "no-cache, no-store, max-age=0",
+                "Pragma": "no-cache",
+            },
         )
 
-        for url in URLS:
-            print("\n" + "=" * 90)
-            print("PAGE:", url)
-            print("=" * 90)
+        page = context.new_page()
 
-            page = context.new_page()
+        for base in BASE_URLS:
+            # 1) Normalna adresa
+            load(page, base, "TEST 1 — NORMAL URL")
 
-            seen = set()
+            # 2) Cache-busting query parametar
+            stamp = int(time.time())
+            bust = f"{base}?_sta_sad={stamp}"
+            load(page, bust, "TEST 2 — CACHE-BUST URL")
 
-            def on_response(response):
-                req = response.request
-                rtype = req.resource_type
-                resp_url = response.url
-
-                # Fokus na stvari koje mogu nositi live podatke.
-                interesting = (
-                    rtype in {"xhr", "fetch", "document"}
-                    or "api" in resp_url.lower()
-                    or "json" in resp_url.lower()
-                    or "measure" in resp_url.lower()
-                    or "wait" in resp_url.lower()
-                    or "border" in resp_url.lower()
-                    or "prelaz" in resp_url.lower()
-                )
-
-                if not interesting:
-                    return
-
-                key = (rtype, resp_url)
-                if key in seen:
-                    return
-                seen.add(key)
-
-                try:
-                    content_type = response.headers.get(
-                        "content-type", ""
-                    )
-                except Exception:
-                    content_type = ""
-
-                print(
-                    f"\nRESPONSE type={rtype} "
-                    f"status={response.status}"
-                )
-                print("URL:", resp_url)
-                print("CONTENT-TYPE:", content_type)
-
-                if (
-                    "application/json" in content_type.lower()
-                    or rtype in {"xhr", "fetch"}
-                ):
-                    try:
-                        body = response.text()
-                        print("BODY:", short(body))
-                    except Exception as exc:
-                        print("BODY ERROR:", exc)
-
-            page.on("response", on_response)
-
-            page.goto(
-                url,
-                wait_until="domcontentloaded",
-                timeout=45000,
-            )
-
-            # Dovoljno dugo da frontend odradi inicijalni refresh.
-            page.wait_for_timeout(15000)
-
-            print("\n--- PERFORMANCE RESOURCES ---")
-            resources = page.evaluate(
-                """performance.getEntriesByType('resource')
-                .map(x => ({
-                  name: x.name,
-                  initiatorType: x.initiatorType
-                }))"""
-            )
-
-            for item in resources:
-                name = item.get("name", "")
-                initiator = item.get("initiatorType", "")
-                lower = name.lower()
-
-                if (
-                    initiator in {"fetch", "xmlhttprequest"}
-                    or "api" in lower
-                    or "json" in lower
-                    or "measure" in lower
-                    or "wait" in lower
-                    or "border" in lower
-                ):
-                    print(
-                        f"{initiator}: {name}"
-                    )
-
-            print("\n--- CURRENT PAGE TEXT (selected hints) ---")
-            body_text = page.locator("body").inner_text()
-
-            for line in body_text.splitlines():
-                l = line.strip()
-                low = l.lower()
-                if (
-                    "meren" in low
-                    or "čekanj" in low
-                    or "gornji varoš" in low
-                    or "svilaj" in low
-                ):
-                    print(short(l, 500))
-
-            page.close()
+            # 3) Drugi cache-bust da vidimo da li se odgovor mijenja
+            time.sleep(2)
+            stamp2 = int(time.time())
+            bust2 = f"{base}?_sta_sad={stamp2}"
+            load(page, bust2, "TEST 3 — SECOND CACHE-BUST URL")
 
         browser.close()
 
