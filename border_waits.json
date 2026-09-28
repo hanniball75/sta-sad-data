@@ -1,10 +1,11 @@
 {
-  "schema_version": 1,
-  "generated_at": "2026-09-28T19:02:29Z",
+  "schema_version": 2,
+  "generated_at": "2026-09-28T19:34:05Z",
   "source": {
     "name": "HAK / MUP RH",
     "url": "https://www.hak.hr/info/stanje-na-cestama/",
-    "source_updated": "28.09.2026. 19:23"
+    "source_updated": "28.09.2026. 19:23",
+    "source_updated_at": "2026-09-28T19:23:00+02:00"
   },
   "crossings": {
     "gornji_varos_gradiska": {
@@ -14,12 +15,14 @@
       "to_bih": {
         "label": "Nema podataka",
         "wait_minutes": null,
-        "observed_at": null
+        "observed_at": null,
+        "observed_text": null
       },
       "to_croatia": {
         "label": "Nema podataka",
         "wait_minutes": null,
-        "observed_at": null
+        "observed_at": null,
+        "observed_text": null
       }
     },
     "slavonski_brod_brod": {
@@ -29,12 +32,14 @@
       "to_bih": {
         "label": "Nema podataka",
         "wait_minutes": null,
-        "observed_at": null
+        "observed_at": null,
+        "observed_text": null
       },
       "to_croatia": {
         "label": "Nema podataka",
         "wait_minutes": null,
-        "observed_at": null
+        "observed_at": null,
+        "observed_text": null
       }
     },
     "svilaj": {
@@ -42,14 +47,16 @@
       "hak_name": "Svilaj",
       "available": true,
       "to_bih": {
-        "label": "2 h T: 28.09.2026 18:11:23",
+        "label": "2 h",
         "wait_minutes": 120,
-        "observed_at": null
+        "observed_at": "2026-09-28T18:11:23+02:00",
+        "observed_text": "28.9.2026. 18:11:23"
       },
       "to_croatia": {
         "label": "Nema podataka",
         "wait_minutes": null,
-        "observed_at": null
+        "observed_at": null,
+        "observed_text": null
       }
     },
     "zupanja_orasje": {
@@ -59,12 +66,14 @@
       "to_bih": {
         "label": "Nema podataka",
         "wait_minutes": null,
-        "observed_at": null
+        "observed_at": null,
+        "observed_text": null
       },
       "to_croatia": {
         "label": "Nema podataka",
         "wait_minutes": null,
-        "observed_at": null
+        "observed_at": null,
+        "observed_text": null
       }
     }
   }
