@@ -743,44 +743,86 @@ def granica_rs_parse_rendered(
     expected_direction_text: str,
     url: str,
 ) -> dict:
-    text = clean(page_text)
+    """
+    Čita LIVE karticu Granica.rs iz renderovanog DOM-a.
 
-    # Prvo probaj klasični tekst.
+    Važno:
+    - svaka URL stranica već predstavlja konkretan smjer;
+    - ne smijemo uzeti broj iz FAQ / statističkog teksta niže na stranici;
+    - novi dizajn često prikazuje običan format "10 min",
+      a ne samo "do 10 min".
+    """
+    full_text = clean(page_text)
+
+    # Granica.rs ispod live kartice ima FAQ / opis sa istorijskim primjerima
+    # poput "oko 10 minuta". To nije trenutno mjerenje.
+    # Zato parser ograničavamo samo na gornji LIVE dio stranice.
+    normalized_full = normalize(full_text)
+    live_text = full_text
+
+    faq_markers = [
+        "cesta pitanja",
+        "česta pitanja",
+        "koliko je guzva",
+        "koliko je gužva",
+    ]
+
+    cut_positions = []
+    for marker in faq_markers:
+        pos = normalized_full.find(normalize(marker))
+        if pos > 0:
+            cut_positions.append(pos)
+
+    if cut_positions:
+        live_text = full_text[:min(cut_positions)]
+
+    normalized = normalize(live_text)
+
+    # Prvo probaj klasični format ako ga stranica još uvijek prikazuje.
     parsed = granica_rs_parse_measurement(
-        text,
+        live_text,
         expected_direction_text,
         url,
     )
 
-    # Ako je pronađen podatak, ali nema vremena ili stranica
-    # sada prikazuje relativno vrijeme, dopuni ga.
-    relative_at, relative_text = (
-        _granica_relative_observed_at(text)
+    # Relativno vrijeme ("pre 4 min") tražimo ISKLJUČIVO u live dijelu.
+    relative_at, relative_text = _granica_relative_observed_at(
+        live_text,
     )
 
     if parsed.get("available"):
-        # Ako live DOM ima relativno vrijeme, ono je novije i
-        # važnije od starog server-renderovanog datuma.
         if relative_at is not None:
             parsed["observed_at"] = relative_at
             parsed["observed_text"] = relative_text
+        parsed["rendered_with_browser"] = True
         return parsed
 
-    # Novi Granica.rs dizajn može imati:
-    # "ČEKANJE · IZLAZ IZ HRVATSKE"
-    # "do 5 min"
-    # "mereno pre 17 min"
-    normalized = normalize(text)
-
+    # Novi Granica.rs prikaz može izgledati:
+    #
+    # ČEKANJE · IZLAZ IZ HRVATSKE
+    # 10
+    # min
+    # Mala gužva
+    # 1 vozilo u koloni
+    # poslednje merenje
+    # pre 4 min
+    #
+    # clean() spaja novi red pa dobijamo "10 min".
     wait_match = re.search(
-        r"\b(do\s+\d+\s*min|"
-        r"\d+\s*-\s*\d+\s*min|"
-        r"oko\s+\d+\s*min)\b",
+        r"\b("
+        r"do\s+\d+\s*min(?:uta)?|"
+        r"\d+\s*-\s*\d+\s*min(?:uta)?|"
+        r"oko\s+\d+\s*min(?:uta)?|"
+        r"\d+\s*min(?:uta)?"
+        r")\b",
         normalized,
         flags=re.I,
     )
 
     if not wait_match:
+        parsed["error"] = (
+            "Live procjena čekanja nije pronađena u gornjem dijelu stranice"
+        )
         return parsed
 
     raw_label = clean(wait_match.group(1))
@@ -788,6 +830,7 @@ def granica_rs_parse_rendered(
 
     minimum = None
     maximum = None
+    bound = "estimate"
 
     m = re.search(
         r"do\s+(\d+)\s*min",
@@ -797,6 +840,7 @@ def granica_rs_parse_rendered(
         minimum = 0
         maximum = int(m.group(1))
         label = f"do {maximum} min"
+        bound = "upper"
     else:
         m = re.search(
             r"(\d+)\s*-\s*(\d+)\s*min",
@@ -806,9 +850,10 @@ def granica_rs_parse_rendered(
             minimum = int(m.group(1))
             maximum = int(m.group(2))
             label = f"{minimum}-{maximum} min"
+            bound = "range"
         else:
             m = re.search(
-                r"(?:oko\s+)?(\d+)\s*min",
+                r"oko\s+(\d+)\s*min",
                 label_norm,
             )
             if m:
@@ -816,7 +861,17 @@ def granica_rs_parse_rendered(
                 maximum = minimum
                 label = f"oko {minimum} min"
             else:
-                label = raw_label
+                m = re.search(
+                    r"(\d+)\s*min",
+                    label_norm,
+                )
+                if m:
+                    minimum = int(m.group(1))
+                    maximum = minimum
+                    # Ako Granica.rs kaže "10 min", zadrži upravo to.
+                    label = f"{minimum} min"
+                else:
+                    label = raw_label
 
     congestion = None
     for candidate in [
@@ -829,17 +884,17 @@ def granica_rs_parse_rendered(
             congestion = candidate
             break
 
-    observed_at, observed_text = (
-        _granica_relative_observed_at(text)
-    )
+    # Ako live prikaz nema relativno vrijeme, probaj apsolutni datum,
+    # ali opet samo iz LIVE dijela.
+    observed_at = relative_at
+    observed_text = relative_text
 
-    # Fallback na apsolutni datum ako postoji.
     if observed_at is None:
         m = re.search(
             r"Poslednje\s+merenje:\s*"
             r"(\d{1,2}\.\d{1,2}\.\d{4}\.?\s+"
             r"\d{1,2}:\d{2}(?::\d{2})?)",
-            text,
+            live_text,
             flags=re.I,
         )
         if m:
@@ -854,6 +909,7 @@ def granica_rs_parse_rendered(
         "label": label,
         "wait_minutes_min": minimum,
         "wait_minutes_max": maximum,
+        "bound": bound,
         "congestion": congestion,
         "observed_at": observed_at,
         "observed_text": observed_text,
@@ -883,6 +939,10 @@ def fetch_granica_rs_page(
         page = browser.new_page(
             locale="sr-RS",
             user_agent=HEADERS["User-Agent"],
+            extra_http_headers={
+                "Cache-Control": "no-cache, no-store, max-age=0",
+                "Pragma": "no-cache",
+            },
         )
 
         try:
@@ -892,8 +952,8 @@ def fetch_granica_rs_page(
                 timeout=30000,
             )
 
-            # Daj live JavaScriptu vremena da osvježi mjerenje.
-            page.wait_for_timeout(3500)
+            # Daj stranici vremena da završi live prikaz.
+            page.wait_for_timeout(5000)
 
             # Ako mreža utihne brzo, dodatno je sačekaj,
             # ali ne ruši workflow ako ne utihne.
@@ -1144,22 +1204,33 @@ def main() -> int:
     for key, item in result["crossings"].items():
         bihamk = item.get("bihamk", {})
         granica = item.get("granica_rs", {})
-        grs_bih = (granica.get("to_bih") or {}).get(
+        grs_bih_data = granica.get("to_bih") or {}
+        grs_hr_data = granica.get("to_croatia") or {}
+
+        grs_bih = grs_bih_data.get(
             "label",
             "Nema podataka",
         )
-        grs_hr = (granica.get("to_croatia") or {}).get(
+        grs_hr = grs_hr_data.get(
             "label",
             "Nema podataka",
         )
+
+        grs_bih_time = grs_bih_data.get(
+            "observed_text",
+        ) or "bez vremena"
+
+        grs_hr_time = grs_hr_data.get(
+            "observed_text",
+        ) or "bez vremena"
 
         print(
             f"- {key}: "
             f"HAK->BiH={item['to_bih']['label']}; "
             f"HAK->HR={item['to_croatia']['label']}; "
             f"BIHAMK={bihamk.get('label', 'Nema podataka')}; "
-            f"Granica.rs->BiH={grs_bih}; "
-            f"Granica.rs->HR={grs_hr}"
+            f"Granica.rs->BiH={grs_bih} ({grs_bih_time}); "
+            f"Granica.rs->HR={grs_hr} ({grs_hr_time})"
         )
 
     return 0
