@@ -34,6 +34,10 @@ CROSSINGS = {
             "Gornji Varoš",
         ],
         "bihamk_names": ["GP Gradiška", "Gradiška"],
+        "granica_rs": {
+            "to_bih": "https://granica.rs/prelaz/hr-gornji-varos",
+            "to_croatia": "https://granica.rs/prelaz/ba-gradiska",
+        },
     },
     "slavonski_brod_brod": {
         "name": "Slavonski Brod – Brod",
@@ -42,11 +46,19 @@ CROSSINGS = {
             "Slavonski Brod",
         ],
         "bihamk_names": ["GP Brod", "Brod"],
+        "granica_rs": {
+            "to_bih": "https://granica.rs/prelaz/hr-slavonski-brod",
+            "to_croatia": "https://granica.rs/prelaz/ba-brod",
+        },
     },
     "svilaj": {
         "name": "Svilaj",
         "aliases": ["Svilaj"],
         "bihamk_names": ["GP Svilaj", "Svilaj"],
+        "granica_rs": {
+            "to_bih": "https://granica.rs/prelaz/hr-svilaj",
+            "to_croatia": "https://granica.rs/prelaz/ba-svilaj",
+        },
     },
     "zupanja_orasje": {
         "name": "Županja – Orašje",
@@ -55,6 +67,10 @@ CROSSINGS = {
             "Županja",
         ],
         "bihamk_names": ["GP Orašje", "Orašje"],
+        "granica_rs": {
+            "to_bih": "https://granica.rs/prelaz/hr-zupanja",
+            "to_croatia": "https://granica.rs/prelaz/ba-orasje",
+        },
     },
 }
 
@@ -508,6 +524,220 @@ def fetch_bihamk() -> tuple[dict[str, dict], dict]:
     return crossings, source
 
 
+def granica_rs_parse_measurement(
+    page_text: str,
+    expected_direction_text: str,
+    url: str,
+) -> dict:
+    """
+    Čita server-renderovani tekst Granica.rs stranice.
+    Uzimamo samo PRVI smjerni blok na toj stranici, jer URL već
+    predstavlja konkretnu stranu granice i smjer koji nas zanima.
+    """
+
+    text = clean(page_text)
+
+    # Npr:
+    # "Izlaz - ka BiH"
+    # "Velika gužva"
+    # "Procena čekanja: ~285-435 min"
+    # "Poslednje merenje: 27.09.2026. 14:01"
+    direction_match = re.search(
+        re.escape(expected_direction_text),
+        text,
+        flags=re.I,
+    )
+
+    if not direction_match:
+        return {
+            "available": False,
+            "label": "Nema podataka",
+            "wait_minutes_min": None,
+            "wait_minutes_max": None,
+            "congestion": None,
+            "observed_at": None,
+            "observed_text": None,
+            "page_url": url,
+            "error": "Smjerni blok nije pronađen",
+        }
+
+    segment = text[direction_match.end():]
+    # ograniči na sljedeći smjerni blok ili alternative
+    cut_positions = []
+
+    for token in [
+        "Ulaz - ka",
+        "Izlaz - ka",
+        "Nepoznat smer",
+        "Alternativni prelazi",
+    ]:
+        pos = segment.lower().find(token.lower())
+        if pos > 0:
+            cut_positions.append(pos)
+
+    if cut_positions:
+        segment = segment[:min(cut_positions)]
+
+    wait_match = re.search(
+        r"Procena\s+čekanja:\s*"
+        r"(do\s+\d+\s*min|~?\s*\d+\s*-\s*\d+\s*min|~?\s*\d+\s*min)",
+        segment,
+        flags=re.I,
+    )
+
+    observed_match = re.search(
+        r"Poslednje\s+merenje:\s*"
+        r"(\d{1,2}\.\d{1,2}\.\d{4}\.?\s+\d{1,2}:\d{2}(?::\d{2})?)",
+        segment,
+        flags=re.I,
+    )
+
+    # Gužva je obično tekst između smjera i "Procena čekanja".
+    congestion = None
+    if wait_match:
+        before_wait = clean(segment[:wait_match.start()])
+        # uzmi zadnju kratku frazu prije procjene
+        candidates = [
+            "Nema gužve",
+            "Mala gužva",
+            "Srednja gužva",
+            "Velika gužva",
+            "Nepoznato",
+        ]
+        for candidate in candidates:
+            if candidate.lower() in before_wait.lower():
+                congestion = candidate
+                break
+
+    if not wait_match:
+        return {
+            "available": False,
+            "label": "Nema podataka",
+            "wait_minutes_min": None,
+            "wait_minutes_max": None,
+            "congestion": congestion,
+            "observed_at": None,
+            "observed_text": None,
+            "page_url": url,
+            "error": "Procjena čekanja nije pronađena",
+        }
+
+    raw_label = clean(wait_match.group(1))
+    label_norm = normalize(raw_label)
+
+    minimum = None
+    maximum = None
+
+    m = re.search(r"do\s+(\d+)\s*min", label_norm)
+    if m:
+        maximum = int(m.group(1))
+        minimum = 0
+        label = f"do {maximum} min"
+    else:
+        m = re.search(r"(\d+)\s*-\s*(\d+)\s*min", label_norm)
+        if m:
+            minimum = int(m.group(1))
+            maximum = int(m.group(2))
+            label = f"{minimum}-{maximum} min"
+        else:
+            m = re.search(r"(\d+)\s*min", label_norm)
+            if m:
+                minimum = int(m.group(1))
+                maximum = minimum
+                label = f"oko {minimum} min"
+            else:
+                label = raw_label
+
+    observed_text = (
+        clean(observed_match.group(1))
+        if observed_match
+        else None
+    )
+    observed_at = (
+        parse_local_datetime(
+            observed_text,
+            ZoneInfo("Europe/Zagreb"),
+        )
+        if observed_text
+        else None
+    )
+
+    return {
+        "available": True,
+        "label": label,
+        "wait_minutes_min": minimum,
+        "wait_minutes_max": maximum,
+        "congestion": congestion,
+        "observed_at": observed_at,
+        "observed_text": observed_text,
+        "page_url": url,
+        "error": None,
+    }
+
+
+def fetch_granica_rs_page(
+    url: str,
+    expected_direction_text: str,
+) -> dict:
+    response = requests.get(
+        url,
+        headers=HEADERS,
+        timeout=25,
+    )
+    response.raise_for_status()
+    response.encoding = response.apparent_encoding or "utf-8"
+
+    soup = BeautifulSoup(response.text, "html.parser")
+    page_text = soup.get_text(" ", strip=True)
+
+    return granica_rs_parse_measurement(
+        page_text,
+        expected_direction_text,
+        url,
+    )
+
+
+def fetch_granica_rs_for_crossing(spec: dict) -> dict:
+    urls = spec.get("granica_rs", {})
+
+    result = {
+        "source": "Granica.rs",
+        "to_bih": None,
+        "to_croatia": None,
+        "error": None,
+    }
+
+    try:
+        if urls.get("to_bih"):
+            result["to_bih"] = fetch_granica_rs_page(
+                urls["to_bih"],
+                "Izlaz - ka BiH",
+            )
+    except Exception as exc:
+        result["to_bih"] = {
+            "available": False,
+            "label": "Nema podataka",
+            "page_url": urls.get("to_bih"),
+            "error": str(exc),
+        }
+
+    try:
+        if urls.get("to_croatia"):
+            result["to_croatia"] = fetch_granica_rs_page(
+                urls["to_croatia"],
+                "Izlaz - ka Hrvatskoj",
+            )
+    except Exception as exc:
+        result["to_croatia"] = {
+            "available": False,
+            "label": "Nema podataka",
+            "page_url": urls.get("to_croatia"),
+            "error": str(exc),
+        }
+
+    return result
+
+
 def main() -> int:
     response = requests.get(
         SOURCE_URL,
@@ -562,6 +792,11 @@ def main() -> int:
                 "source_updated_at": source_updated_at,
             },
             "bihamk": bihamk_source,
+            "granica_rs": {
+                "name": "Granica.rs",
+                "url": "https://granica.rs/",
+                "note": "Procjene sa javnih kamera; dodatni izvor",
+            },
         },
         "crossings": {},
     }
@@ -583,6 +818,10 @@ def main() -> int:
                 "observed_text": bihamk_source.get("source_updated"),
                 "raw_text": None,
             },
+        )
+
+        item["granica_rs"] = fetch_granica_rs_for_crossing(
+            spec,
         )
 
         result["crossings"][key] = item
@@ -610,11 +849,23 @@ def main() -> int:
 
     for key, item in result["crossings"].items():
         bihamk = item.get("bihamk", {})
+        granica = item.get("granica_rs", {})
+        grs_bih = (granica.get("to_bih") or {}).get(
+            "label",
+            "Nema podataka",
+        )
+        grs_hr = (granica.get("to_croatia") or {}).get(
+            "label",
+            "Nema podataka",
+        )
+
         print(
             f"- {key}: "
-            f"HAK prema BiH={item['to_bih']['label']}; "
-            f"HAK prema HR={item['to_croatia']['label']}; "
-            f"BIHAMK={bihamk.get('label', 'Nema podataka')}"
+            f"HAK->BiH={item['to_bih']['label']}; "
+            f"HAK->HR={item['to_croatia']['label']}; "
+            f"BIHAMK={bihamk.get('label', 'Nema podataka')}; "
+            f"Granica.rs->BiH={grs_bih}; "
+            f"Granica.rs->HR={grs_hr}"
         )
 
     return 0
