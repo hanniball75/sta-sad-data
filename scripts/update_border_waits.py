@@ -539,10 +539,6 @@ def fetch_bihamk() -> tuple[dict[str, dict], dict]:
     crossings: dict[str, dict] = {}
     found = 0
 
-    # JEDAN Granica.rs fetcher za sve prelaze.
-    # Direktni HTTP je primarni put; Chromium se pali samo ako zatreba.
-    granica_fetcher = GranicaRsFetcher()
-
     for key, spec in CROSSINGS.items():
         section = bihamk_section_text(
             soup,
@@ -997,13 +993,16 @@ def granica_rs_parse_rendered(
 
 class GranicaRsFetcher:
     """
-    Brzi Granica.rs fetcher.
+    Granica.rs LIVE fetcher.
 
-    Redoslijed:
-    1) requests + no-cache + cache-busting URL
-    2) samo ako to ne uspije: jedan zajednički Chromium fallback
+    Pouzdanost ima prednost:
+    - jedan Chromium se koristi za SVE prelaze i oba smjera;
+    - ista browser stranica se ponovo koristi za svaku navigaciju;
+    - ako prvi kadar DOM-a izgleda star, kratko sačekamo i čitamo ponovo;
+    - requests je samo rezervni fallback ako browser potpuno zakaže.
 
-    Browser se više NE pokreće za svaki prelaz/smjer posebno.
+    Time dobijamo stvarni JS-renderovani live podatak bez pokretanja
+    novog browser procesa za svaki prelaz.
     """
 
     def __init__(self) -> None:
@@ -1021,10 +1020,12 @@ class GranicaRsFetcher:
         self._playwright = None
         self._browser = None
         self._context = None
+        self._page = None
 
         self.stats = {
-            "requests_ok": 0,
-            "browser_fallback": 0,
+            "browser_ok": 0,
+            "browser_retry": 0,
+            "http_fallback": 0,
             "cache_hits": 0,
             "failures": 0,
         }
@@ -1034,31 +1035,161 @@ class GranicaRsFetcher:
         separator = "&" if "?" in url else "?"
         return f"{url}{separator}_sta_sad={stamp}"
 
-    def _camera_from_soup(
+    def _is_fresh_measurement(
         self,
-        soup: BeautifulSoup,
-    ) -> tuple[Optional[str], Optional[str]]:
-        for img in soup.find_all("img"):
-            src = (
-                img.get("src")
-                or img.get("data-src")
-                or ""
+        parsed: dict,
+        max_age_minutes: int = 35,
+    ) -> bool:
+        if not parsed.get("available"):
+            return False
+
+        observed_at = parsed.get("observed_at")
+
+        # Ako Granica.rs daje procjenu ali ne daje vrijeme,
+        # prihvati podatak; Flutter će ga kasnije označiti kako treba.
+        if not observed_at:
+            return True
+
+        try:
+            dt = datetime.fromisoformat(
+                str(observed_at).replace("Z", "+00:00")
             )
 
-            if "granicars-snapshots" in src:
-                return src, img.get("alt")
+            now = datetime.now(dt.tzinfo or timezone.utc)
 
-        return None, None
+            if dt.tzinfo is None:
+                dt = dt.replace(tzinfo=timezone.utc)
 
-    def _requests_fetch(
+            age = now - dt
+
+            return age <= timedelta(
+                minutes=max_age_minutes,
+            )
+        except Exception:
+            return True
+
+    def _ensure_browser(self) -> None:
+        if self._browser is not None:
+            return
+
+        self._playwright = sync_playwright().start()
+
+        self._browser = self._playwright.chromium.launch(
+            headless=True,
+            args=[
+                "--no-sandbox",
+                "--disable-dev-shm-usage",
+            ],
+        )
+
+        self._context = self._browser.new_context(
+            locale="sr-RS",
+            user_agent=HEADERS["User-Agent"],
+            extra_http_headers={
+                "Cache-Control": "no-cache, no-store, max-age=0",
+                "Pragma": "no-cache",
+            },
+        )
+
+        # Jedna stranica se koristi za sve Granica.rs URL-ove.
+        self._page = self._context.new_page()
+
+    def _read_browser_dom(
         self,
         url: str,
         expected_direction_text: str,
     ) -> dict:
-        request_url = self._cache_bust_url(url)
+        body_text = self._page.locator(
+            "body"
+        ).inner_text()
 
+        parsed = granica_rs_parse_rendered(
+            body_text,
+            expected_direction_text,
+            url,
+        )
+
+        try:
+            images = self._page.locator(
+                "img"
+            ).evaluate_all(
+                """
+                imgs => imgs.map(img => ({
+                  src: img.currentSrc ||
+                       img.src ||
+                       img.dataset.src ||
+                       '',
+                  alt: img.alt || ''
+                }))
+                """
+            )
+
+            snapshot = next(
+                (
+                    item
+                    for item in images
+                    if "granicars-snapshots"
+                    in item.get("src", "")
+                ),
+                None,
+            )
+
+            if snapshot:
+                parsed["camera_url"] = snapshot.get("src")
+                parsed["camera_alt"] = snapshot.get("alt")
+            else:
+                parsed["camera_url"] = None
+                parsed["camera_alt"] = None
+        except Exception:
+            parsed["camera_url"] = None
+            parsed["camera_alt"] = None
+
+        parsed["transport"] = "browser"
+        parsed["rendered_with_browser"] = True
+
+        return parsed
+
+    def _browser_fetch(
+        self,
+        url: str,
+        expected_direction_text: str,
+    ) -> dict:
+        self._ensure_browser()
+
+        self._page.goto(
+            self._cache_bust_url(url),
+            wait_until="domcontentloaded",
+            timeout=30000,
+        )
+
+        # Većina Granica.rs stranica završi JS prikaz vrlo brzo.
+        self._page.wait_for_timeout(1200)
+
+        parsed = self._read_browser_dom(
+            url,
+            expected_direction_text,
+        )
+
+        if self._is_fresh_measurement(parsed):
+            return parsed
+
+        # Ako je prvi DOM još pokazao server-renderovanu/staru vrijednost,
+        # sačekaj JS update pa pročitaj ISTU stranicu ponovo.
+        self.stats["browser_retry"] += 1
+        self._page.wait_for_timeout(2800)
+
+        return self._read_browser_dom(
+            url,
+            expected_direction_text,
+        )
+
+    def _requests_fallback(
+        self,
+        url: str,
+        expected_direction_text: str,
+    ) -> dict:
         response = self.session.get(
-            request_url,
+            self._cache_bust_url(url),
             timeout=18,
         )
         response.raise_for_status()
@@ -1072,8 +1203,6 @@ class GranicaRsFetcher:
             "html.parser",
         )
 
-        # Zadržavamo redove koliko možemo;
-        # parser ih kasnije sam normalizuje.
         body_text = soup.get_text(
             "\n",
             strip=True,
@@ -1085,128 +1214,11 @@ class GranicaRsFetcher:
             url,
         )
 
-        camera_url, camera_alt = (
-            self._camera_from_soup(soup)
-        )
+        parsed["camera_url"] = None
+        parsed["camera_alt"] = None
+        parsed["transport"] = "requests_fallback"
 
-        parsed["camera_url"] = camera_url
-        parsed["camera_alt"] = camera_alt
-        parsed["transport"] = "requests"
-
-        # Ako smo našli stvarnu live procjenu,
-        # nema razloga paliti Chromium.
-        if parsed.get("available"):
-            return parsed
-
-        raise RuntimeError(
-            parsed.get("error")
-            or "Granica.rs HTTP parser nije našao live podatak"
-        )
-
-    def _ensure_browser(self) -> None:
-        if self._browser is not None:
-            return
-
-        self._playwright = sync_playwright().start()
-
-        self._browser = (
-            self._playwright.chromium.launch(
-                headless=True,
-                args=[
-                    "--no-sandbox",
-                    "--disable-dev-shm-usage",
-                ],
-            )
-        )
-
-        self._context = (
-            self._browser.new_context(
-                locale="sr-RS",
-                user_agent=HEADERS["User-Agent"],
-                extra_http_headers={
-                    "Cache-Control":
-                        "no-cache, no-store, max-age=0",
-                    "Pragma": "no-cache",
-                },
-            )
-        )
-
-    def _browser_fetch(
-        self,
-        url: str,
-        expected_direction_text: str,
-    ) -> dict:
-        self._ensure_browser()
-
-        page = self._context.new_page()
-
-        try:
-            page.goto(
-                self._cache_bust_url(url),
-                wait_until="domcontentloaded",
-                timeout=30000,
-            )
-
-            # Chromium je sada fallback, pa kratko čekanje
-            # ne usporava normalni requests put.
-            page.wait_for_timeout(3000)
-
-            body_text = page.locator(
-                "body"
-            ).inner_text()
-
-            parsed = granica_rs_parse_rendered(
-                body_text,
-                expected_direction_text,
-                url,
-            )
-
-            try:
-                images = page.locator(
-                    "img"
-                ).evaluate_all(
-                    """
-                    imgs => imgs.map(img => ({
-                      src: img.currentSrc ||
-                           img.src ||
-                           img.dataset.src ||
-                           '',
-                      alt: img.alt || ''
-                    }))
-                    """
-                )
-
-                snapshot = next(
-                    (
-                        item
-                        for item in images
-                        if "granicars-snapshots"
-                        in item.get("src", "")
-                    ),
-                    None,
-                )
-
-                if snapshot:
-                    parsed["camera_url"] = (
-                        snapshot.get("src")
-                    )
-                    parsed["camera_alt"] = (
-                        snapshot.get("alt")
-                    )
-                else:
-                    parsed["camera_url"] = None
-                    parsed["camera_alt"] = None
-            except Exception:
-                parsed["camera_url"] = None
-                parsed["camera_alt"] = None
-
-            parsed["transport"] = "browser"
-            parsed["rendered_with_browser"] = True
-
-            return parsed
-
-        finally:
-            page.close()
+        return parsed
 
     def fetch(
         self,
@@ -1224,20 +1236,7 @@ class GranicaRsFetcher:
             self.stats["cache_hits"] += 1
             return dict(cached)
 
-        request_error = None
-
-        try:
-            parsed = self._requests_fetch(
-                url,
-                expected_direction_text,
-            )
-
-            self.stats["requests_ok"] += 1
-            self.cache[key] = dict(parsed)
-            return parsed
-
-        except Exception as exc:
-            request_error = str(exc)
+        browser_error = None
 
         try:
             parsed = self._browser_fetch(
@@ -1245,12 +1244,25 @@ class GranicaRsFetcher:
                 expected_direction_text,
             )
 
-            self.stats["browser_fallback"] += 1
+            self.stats["browser_ok"] += 1
+            self.cache[key] = dict(parsed)
+            return parsed
 
-            if request_error:
-                parsed["requests_error"] = (
-                    request_error
-                )
+        except Exception as exc:
+            browser_error = str(exc)
+
+        # Samo ako browser ne može otvoriti/obraditi stranicu,
+        # koristi HTTP kao rezervni podatak.
+        try:
+            parsed = self._requests_fallback(
+                url,
+                expected_direction_text,
+            )
+
+            self.stats["http_fallback"] += 1
+
+            if browser_error:
+                parsed["browser_error"] = browser_error
 
             self.cache[key] = dict(parsed)
             return parsed
@@ -1271,12 +1283,18 @@ class GranicaRsFetcher:
                 "camera_alt": None,
                 "transport": None,
                 "error": (
-                    f"requests={request_error}; "
-                    f"browser={exc}"
+                    f"browser={browser_error}; "
+                    f"http={exc}"
                 ),
             }
 
     def close(self) -> None:
+        try:
+            if self._page is not None:
+                self._page.close()
+        except Exception:
+            pass
+
         try:
             if self._context is not None:
                 self._context.close()
@@ -1440,7 +1458,7 @@ def main() -> int:
             "granica_rs": {
                 "name": "Granica.rs",
                 "url": "https://granica.rs/",
-                "note": "Procjene sa javnih kamera; optimizovani HTTP-first fetch v1",
+                "note": "Procjene sa javnih kamera; shared Chromium live fetch v2",
             },
         },
         "crossings": {},
@@ -1482,8 +1500,9 @@ def main() -> int:
 
     print(
         "Granica.rs fetch statistika: "
-        f"HTTP={granica_fetcher.stats['requests_ok']}; "
-        f"browser_fallback={granica_fetcher.stats['browser_fallback']}; "
+        f"browser={granica_fetcher.stats['browser_ok']}; "
+        f"browser_retry={granica_fetcher.stats['browser_retry']}; "
+        f"http_fallback={granica_fetcher.stats['http_fallback']}; "
         f"cache_hits={granica_fetcher.stats['cache_hits']}; "
         f"failures={granica_fetcher.stats['failures']}"
     )
