@@ -808,16 +808,41 @@ def granica_rs_parse_rendered(
     # pre 4 min
     #
     # clean() spaja novi red pa dobijamo "10 min".
-    wait_match = re.search(
+    # Na novom Granica.rs prikazu "poslednje merenje pre 16 min"
+    # može stajati prije same procjene čekanja. Zato NE uzimamo prvi
+    # broj koji završava na "min", nego preskačemo sve kandidate koji
+    # su dio izraza "pre X min".
+    wait_match = None
+
+    candidate_pattern = re.compile(
         r"\b("
         r"do\s+\d+\s*min(?:uta)?|"
         r"\d+\s*-\s*\d+\s*min(?:uta)?|"
         r"oko\s+\d+\s*min(?:uta)?|"
         r"\d+\s*min(?:uta)?"
         r")\b",
-        normalized,
         flags=re.I,
     )
+
+    for candidate_match in candidate_pattern.finditer(normalized):
+        before = normalized[
+            max(0, candidate_match.start() - 40):
+            candidate_match.start()
+        ]
+
+        # "pre 16 min" = starost mjerenja, NIJE čekanje.
+        if re.search(r"\bpre\s*$", before):
+            continue
+
+        # Dodatna zaštita ako je tekst oko timestamp-a drugačije složen.
+        if (
+            "poslednje merenje" in before[-35:]
+            and re.search(r"\bpre\s+\d*\s*$", before[-20:])
+        ):
+            continue
+
+        wait_match = candidate_match
+        break
 
     if not wait_match:
         parsed["error"] = (
@@ -1132,7 +1157,7 @@ def main() -> int:
             "granica_rs": {
                 "name": "Granica.rs",
                 "url": "https://granica.rs/",
-                "note": "Procjene sa javnih kamera; dodatni izvor",
+                "note": "Procjene sa javnih kamera; parser ignoriše relativnu starost mjerenja",
             },
         },
         "crossings": {},
