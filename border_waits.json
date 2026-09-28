@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "generated_at": null,
+  "source": {
+    "name": "HAK / MUP RH",
+    "url": "https://www.hak.hr/info/stanje-na-cestama/",
+    "source_updated": null
+  },
+  "crossings": {
+    "gornji_varos_gradiska": {
+      "name": "Gornji Varoš – Gradiška",
+      "hak_name": "Gornji Varoš (Gradiška (novi most))",
+      "available": false,
+      "to_bih": {
+        "label": "Nema podataka",
+        "wait_minutes": null,
+        "observed_at": null
+      },
+      "to_croatia": {
+        "label": "Nema podataka",
+        "wait_minutes": null,
+        "observed_at": null
+      }
+    },
+    "slavonski_brod_brod": {
+      "name": "Slavonski Brod – Brod",
+      "hak_name": "Slavonski Brod (Bosanski Brod)",
+      "available": false,
+      "to_bih": {
+        "label": "Nema podataka",
+        "wait_minutes": null,
+        "observed_at": null
+      },
+      "to_croatia": {
+        "label": "Nema podataka",
+        "wait_minutes": null,
+        "observed_at": null
+      }
+    },
+    "svilaj": {
+      "name": "Svilaj",
+      "hak_name": "Svilaj",
+      "available": false,
+      "to_bih": {
+        "label": "Nema podataka",
+        "wait_minutes": null,
+        "observed_at": null
+      },
+      "to_croatia": {
+        "label": "Nema podataka",
+        "wait_minutes": null,
+        "observed_at": null
+      }
+    },
+    "zupanja_orasje": {
+      "name": "Županja – Orašje",
+      "hak_name": "Županja (Orašje)",
+      "available": false,
+      "to_bih": {
+        "label": "Nema podataka",
+        "wait_minutes": null,
+        "observed_at": null
+      },
+      "to_croatia": {
+        "label": "Nema podataka",
+        "wait_minutes": null,
+        "observed_at": null
+      }
+    }
+  }
+}
