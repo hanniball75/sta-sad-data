@@ -3,13 +3,14 @@ from __future__ import annotations
 import json
 import re
 import sys
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from zoneinfo import ZoneInfo
 from pathlib import Path
 from typing import Optional
 
 import requests
 from bs4 import BeautifulSoup
+from playwright.sync_api import sync_playwright
 
 SOURCE_URL = "https://www.hak.hr/info/stanje-na-cestama/"
 BIHAMK_URL = "https://bihamk.ba/spi/stanje-na-cesti-u-bih/granicni-prijelazi"
@@ -675,26 +676,240 @@ def granica_rs_parse_measurement(
     }
 
 
+def _granica_relative_observed_at(
+    text: str,
+) -> tuple[Optional[str], Optional[str]]:
+    """
+    Granica.rs live prikaz često koristi relativno vrijeme:
+    'pre 17 min', 'pre 2 h', 'pre 1 d'.
+    Pretvaramo ga u približno ISO vrijeme.
+    """
+    normalized = normalize(text)
+    now = datetime.now(ZoneInfo("Europe/Zagreb"))
+
+    # npr. "pre 2 h 15 min"
+    m = re.search(
+        r"\bpre\s+(\d+)\s*h(?:\s+(\d+)\s*min)?\b",
+        normalized,
+    )
+    if m:
+        hours = int(m.group(1))
+        minutes = int(m.group(2) or 0)
+        dt = now - timedelta(
+            hours=hours,
+            minutes=minutes,
+        )
+        raw = f"pre {hours} h"
+        if minutes:
+            raw += f" {minutes} min"
+        return (
+            dt.replace(microsecond=0).isoformat(),
+            raw,
+        )
+
+    m = re.search(
+        r"\bpre\s+(\d+)\s*min\b",
+        normalized,
+    )
+    if m:
+        minutes = int(m.group(1))
+        dt = now - timedelta(minutes=minutes)
+        return (
+            dt.replace(microsecond=0).isoformat(),
+            f"pre {minutes} min",
+        )
+
+    m = re.search(
+        r"\bpre\s+(\d+)\s*d\b",
+        normalized,
+    )
+    if m:
+        days = int(m.group(1))
+        dt = now - timedelta(days=days)
+        return (
+            dt.replace(microsecond=0).isoformat(),
+            f"pre {days} d",
+        )
+
+    return None, None
+
+
+def granica_rs_parse_rendered(
+    page_text: str,
+    expected_direction_text: str,
+    url: str,
+) -> dict:
+    text = clean(page_text)
+
+    # Prvo probaj klasični tekst.
+    parsed = granica_rs_parse_measurement(
+        text,
+        expected_direction_text,
+        url,
+    )
+
+    # Ako je pronađen podatak, ali nema vremena ili stranica
+    # sada prikazuje relativno vrijeme, dopuni ga.
+    relative_at, relative_text = (
+        _granica_relative_observed_at(text)
+    )
+
+    if parsed.get("available"):
+        # Ako live DOM ima relativno vrijeme, ono je novije i
+        # važnije od starog server-renderovanog datuma.
+        if relative_at is not None:
+            parsed["observed_at"] = relative_at
+            parsed["observed_text"] = relative_text
+        return parsed
+
+    # Novi Granica.rs dizajn može imati:
+    # "ČEKANJE · IZLAZ IZ HRVATSKE"
+    # "do 5 min"
+    # "mereno pre 17 min"
+    normalized = normalize(text)
+
+    wait_match = re.search(
+        r"\b(do\s+\d+\s*min|"
+        r"\d+\s*-\s*\d+\s*min|"
+        r"oko\s+\d+\s*min)\b",
+        normalized,
+        flags=re.I,
+    )
+
+    if not wait_match:
+        return parsed
+
+    raw_label = clean(wait_match.group(1))
+    label_norm = normalize(raw_label)
+
+    minimum = None
+    maximum = None
+
+    m = re.search(
+        r"do\s+(\d+)\s*min",
+        label_norm,
+    )
+    if m:
+        minimum = 0
+        maximum = int(m.group(1))
+        label = f"do {maximum} min"
+    else:
+        m = re.search(
+            r"(\d+)\s*-\s*(\d+)\s*min",
+            label_norm,
+        )
+        if m:
+            minimum = int(m.group(1))
+            maximum = int(m.group(2))
+            label = f"{minimum}-{maximum} min"
+        else:
+            m = re.search(
+                r"(?:oko\s+)?(\d+)\s*min",
+                label_norm,
+            )
+            if m:
+                minimum = int(m.group(1))
+                maximum = minimum
+                label = f"oko {minimum} min"
+            else:
+                label = raw_label
+
+    congestion = None
+    for candidate in [
+        "Nema gužve",
+        "Mala gužva",
+        "Srednja gužva",
+        "Velika gužva",
+    ]:
+        if normalize(candidate) in normalized:
+            congestion = candidate
+            break
+
+    observed_at, observed_text = (
+        _granica_relative_observed_at(text)
+    )
+
+    # Fallback na apsolutni datum ako postoji.
+    if observed_at is None:
+        m = re.search(
+            r"Poslednje\s+merenje:\s*"
+            r"(\d{1,2}\.\d{1,2}\.\d{4}\.?\s+"
+            r"\d{1,2}:\d{2}(?::\d{2})?)",
+            text,
+            flags=re.I,
+        )
+        if m:
+            observed_text = clean(m.group(1))
+            observed_at = parse_local_datetime(
+                observed_text,
+                ZoneInfo("Europe/Zagreb"),
+            )
+
+    return {
+        "available": True,
+        "label": label,
+        "wait_minutes_min": minimum,
+        "wait_minutes_max": maximum,
+        "congestion": congestion,
+        "observed_at": observed_at,
+        "observed_text": observed_text,
+        "page_url": url,
+        "rendered_with_browser": True,
+        "error": None,
+    }
+
+
 def fetch_granica_rs_page(
     url: str,
     expected_direction_text: str,
 ) -> dict:
-    response = requests.get(
-        url,
-        headers=HEADERS,
-        timeout=25,
-    )
-    response.raise_for_status()
-    response.encoding = response.apparent_encoding or "utf-8"
+    """
+    Granica.rs live vrijednosti se osvježavaju JavaScriptom.
+    Zato koristimo pravi Chromium umjesto requests/BeautifulSoup.
+    """
+    with sync_playwright() as p:
+        browser = p.chromium.launch(
+            headless=True,
+            args=[
+                "--no-sandbox",
+                "--disable-dev-shm-usage",
+            ],
+        )
 
-    soup = BeautifulSoup(response.text, "html.parser")
-    page_text = soup.get_text(" ", strip=True)
+        page = browser.new_page(
+            locale="sr-RS",
+            user_agent=HEADERS["User-Agent"],
+        )
 
-    return granica_rs_parse_measurement(
-        page_text,
-        expected_direction_text,
-        url,
-    )
+        try:
+            page.goto(
+                url,
+                wait_until="domcontentloaded",
+                timeout=30000,
+            )
+
+            # Daj live JavaScriptu vremena da osvježi mjerenje.
+            page.wait_for_timeout(3500)
+
+            # Ako mreža utihne brzo, dodatno je sačekaj,
+            # ali ne ruši workflow ako ne utihne.
+            try:
+                page.wait_for_load_state(
+                    "networkidle",
+                    timeout=7000,
+                )
+            except Exception:
+                pass
+
+            body_text = page.locator("body").inner_text()
+
+            return granica_rs_parse_rendered(
+                body_text,
+                expected_direction_text,
+                url,
+            )
+        finally:
+            browser.close()
 
 
 def fetch_granica_rs_for_crossing(spec: dict) -> dict:
