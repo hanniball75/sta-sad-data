@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-09-28T20:06:53Z",
+  "generated_at": "2026-09-28T20:25:04Z",
   "source": {
     "name": "HAK / MUP RH",
     "url": "https://www.hak.hr/info/stanje-na-cestama/",
@@ -60,10 +60,11 @@
           "label": "10-20 min",
           "wait_minutes_min": 10,
           "wait_minutes_max": 20,
-          "congestion": "Srednja gužva",
-          "observed_at": "2026-09-28T20:01:00+02:00",
-          "observed_text": "28.09.2026. 20:01",
+          "congestion": "Mala gužva",
+          "observed_at": "2026-09-28T22:01:09+02:00",
+          "observed_text": "pre 24 min",
           "page_url": "https://granica.rs/prelaz/hr-gornji-varos",
+          "rendered_with_browser": true,
           "error": null
         },
         "to_croatia": {
@@ -72,9 +73,10 @@
           "wait_minutes_min": 0,
           "wait_minutes_max": 5,
           "congestion": "Nema gužve",
-          "observed_at": "2026-09-28T20:00:00+02:00",
-          "observed_text": "28.09.2026. 20:00",
+          "observed_at": "2026-09-28T22:01:14+02:00",
+          "observed_text": "pre 24 min",
           "page_url": "https://granica.rs/prelaz/ba-gradiska",
+          "rendered_with_browser": true,
           "error": null
         },
         "error": null
@@ -114,9 +116,10 @@
           "wait_minutes_min": 0,
           "wait_minutes_max": 5,
           "congestion": "Nema gužve",
-          "observed_at": "2026-09-28T20:01:00+02:00",
-          "observed_text": "28.09.2026. 20:01",
+          "observed_at": "2026-09-28T22:01:18+02:00",
+          "observed_text": "pre 24 min",
           "page_url": "https://granica.rs/prelaz/hr-slavonski-brod",
+          "rendered_with_browser": true,
           "error": null
         },
         "to_croatia": {
@@ -125,9 +128,10 @@
           "wait_minutes_min": 0,
           "wait_minutes_max": 5,
           "congestion": "Nema gužve",
-          "observed_at": "2026-09-28T20:00:00+02:00",
-          "observed_text": "28.09.2026. 20:00",
+          "observed_at": "2026-09-28T22:01:23+02:00",
+          "observed_text": "pre 24 min",
           "page_url": "https://granica.rs/prelaz/ba-brod",
+          "rendered_with_browser": true,
           "error": null
         },
         "error": null
@@ -167,9 +171,10 @@
           "wait_minutes_min": 0,
           "wait_minutes_max": 5,
           "congestion": "Nema gužve",
-          "observed_at": "2026-09-28T20:01:00+02:00",
-          "observed_text": "28.09.2026. 20:01",
+          "observed_at": "2026-09-28T22:01:27+02:00",
+          "observed_text": "pre 24 min",
           "page_url": "https://granica.rs/prelaz/hr-svilaj",
+          "rendered_with_browser": true,
           "error": null
         },
         "to_croatia": {
@@ -178,9 +183,10 @@
           "wait_minutes_min": 0,
           "wait_minutes_max": 5,
           "congestion": "Nema gužve",
-          "observed_at": "2026-09-28T20:01:00+02:00",
-          "observed_text": "28.09.2026. 20:01",
+          "observed_at": "2026-09-28T22:01:32+02:00",
+          "observed_text": "pre 24 min",
           "page_url": "https://granica.rs/prelaz/ba-svilaj",
+          "rendered_with_browser": true,
           "error": null
         },
         "error": null
@@ -220,16 +226,22 @@
           "wait_minutes_min": 0,
           "wait_minutes_max": 5,
           "congestion": "Nema gužve",
-          "observed_at": "2026-09-28T20:01:00+02:00",
-          "observed_text": "28.09.2026. 20:01",
+          "observed_at": "2026-09-28T22:01:36+02:00",
+          "observed_text": "pre 24 min",
           "page_url": "https://granica.rs/prelaz/hr-zupanja",
+          "rendered_with_browser": true,
           "error": null
         },
         "to_croatia": {
           "available": false,
           "label": "Nema podataka",
+          "wait_minutes_min": null,
+          "wait_minutes_max": null,
+          "congestion": null,
+          "observed_at": null,
+          "observed_text": null,
           "page_url": "https://granica.rs/prelaz/ba-orasje",
-          "error": "404 Client Error: Not Found for url: https://granica.rs/prelaz/ba-orasje"
+          "error": "Smjerni blok nije pronađen"
         },
         "error": null
       }
