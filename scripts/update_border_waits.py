@@ -244,6 +244,116 @@ CROSSINGS = {
             },
         },
     },
+    "pavlovica_most": {
+        "name": "Pavlovića most",
+        "border_pair": "BA-RS",
+        "aliases": [
+            "Pavlovića most",
+            "Pavlovića Most",
+        ],
+        "bihamk_names": [
+            "GP Pavlovića Most",
+            "Pavlovića Most",
+            "Pavlovića most",
+        ],
+        "granica_rs": {
+            "to_serbia": {
+                "url": "https://granica.rs/prelaz/ba-pavlovica-most",
+                "direction": "Izlaz - ka Srbiji",
+            },
+            "to_bih": {
+                "url": "https://granica.rs/prelaz/ba-pavlovica-most",
+                "direction": "Ulaz - ka BiH",
+            },
+        },
+    },
+    "raca_bih_srbija": {
+        "name": "Rača – Sremska Rača",
+        "border_pair": "BA-RS",
+        "aliases": [
+            "Rača",
+        ],
+        "bihamk_names": [
+            "GP Rača",
+            "Rača",
+        ],
+        "granica_rs": {
+            "to_serbia": {
+                "url": "https://granica.rs/prelaz/ba-raca",
+                "direction": "Izlaz - ka Srbiji",
+            },
+            "to_bih": {
+                "url": "https://granica.rs/prelaz/ba-raca",
+                "direction": "Ulaz - ka BiH",
+            },
+        },
+    },
+    "sepak": {
+        "name": "Šepak",
+        "border_pair": "BA-RS",
+        "aliases": [
+            "Šepak",
+        ],
+        "bihamk_names": [
+            "GP Šepak",
+            "Šepak",
+        ],
+        "granica_rs": {
+            "to_serbia": {
+                "url": "https://granica.rs/prelaz/ba-sepak",
+                "direction": "Izlaz - ka Srbiji",
+            },
+            "to_bih": {
+                "url": "https://granica.rs/prelaz/ba-sepak",
+                "direction": "Ulaz - ka BiH",
+            },
+        },
+    },
+    "karakaj": {
+        "name": "Karakaj – Mali Zvornik",
+        "border_pair": "BA-RS",
+        "aliases": [
+            "Karakaj",
+        ],
+        "bihamk_names": [
+            "GP Karakaj",
+            "Karakaj",
+        ],
+        "granica_rs": {
+            "to_serbia": {
+                "url": "https://granica.rs/prelaz/ba-karakaj",
+                "direction": "Izlaz - ka Srbiji",
+            },
+            "to_bih": {
+                "url": "https://granica.rs/prelaz/ba-karakaj",
+                "direction": "Ulaz - ka BiH",
+            },
+        },
+    },
+    "visegrad_kotroman": {
+        "name": "Višegrad – Kotroman",
+        "border_pair": "BA-RS",
+        "aliases": [
+            "Višegrad",
+            "Vardište",
+        ],
+        "bihamk_names": [
+            "GP Vardište",
+            "Vardište",
+            "GP Višegrad",
+            "Višegrad",
+        ],
+        "granica_rs": {
+            "to_serbia": {
+                "url": "https://granica.rs/prelaz/ba-visegrad",
+                "direction": "Izlaz - ka Srbiji",
+            },
+            "to_bih": {
+                "url": "https://granica.rs/prelaz/ba-visegrad",
+                "direction": "Ulaz - ka BiH",
+            },
+        },
+    },
 }
 
 
@@ -981,8 +1091,32 @@ def granica_rs_parse_rendered(
         anchors = [
             "cekanje · izlaz iz hrvatske",
             "cekanje - izlaz iz hrvatske",
+            "cekanje · izlaz iz srbije",
+            "cekanje - izlaz iz srbije",
             "izlaz iz hrvatske",
+            "izlaz iz srbije",
             "izlaz - ka bih",
+        ]
+    elif "ulaz - ka bih" in direction_norm:
+        anchors = [
+            "cekanje · ulaz u bih",
+            "cekanje - ulaz u bih",
+            "ulaz u bih",
+            "ulaz - ka bih",
+        ]
+    elif "izlaz - ka srbiji" in direction_norm:
+        anchors = [
+            "cekanje · izlaz iz bih",
+            "cekanje - izlaz iz bih",
+            "izlaz iz bih",
+            "izlaz - ka srbiji",
+        ]
+    elif "ulaz - ka srbiji" in direction_norm:
+        anchors = [
+            "cekanje · ulaz u srbiju",
+            "cekanje - ulaz u srbiju",
+            "ulaz u srbiju",
+            "ulaz - ka srbiji",
         ]
     elif "ulaz - ka hrvatskoj" in direction_norm:
         anchors = [
@@ -1022,7 +1156,16 @@ def granica_rs_parse_rendered(
             "cekanje - ulaz u hrvatsku",
             "cekanje · izlaz iz bih",
             "cekanje - izlaz iz bih",
+            "cekanje · izlaz iz srbije",
+            "cekanje - izlaz iz srbije",
+            "cekanje · ulaz u bih",
+            "cekanje - ulaz u bih",
+            "cekanje · ulaz u srbiju",
+            "cekanje - ulaz u srbiju",
             "izlaz - ka bih",
+            "ulaz - ka bih",
+            "izlaz - ka srbiji",
+            "ulaz - ka srbiji",
             "ulaz - ka hrvatskoj",
             "izlaz - ka hrvatskoj",
             "cesta pitanja",
@@ -1557,58 +1700,69 @@ def _granica_target(
     return None, default_direction
 
 
+def _granica_default_direction(
+    direction_key: str,
+) -> str:
+    defaults = {
+        "to_bih": "Izlaz - ka BiH",
+        "to_croatia": "Izlaz - ka Hrvatskoj",
+        "to_serbia": "Izlaz - ka Srbiji",
+        "to_montenegro": "Izlaz - ka Crnoj Gori",
+        "to_hungary": "Izlaz - ka Mađarskoj",
+        "to_slovenia": "Izlaz - ka Sloveniji",
+    }
+
+    return defaults.get(
+        direction_key,
+        direction_key.replace("_", " "),
+    )
+
+
 def fetch_granica_rs_for_crossing(
     spec: dict,
     fetcher: GranicaRsFetcher,
 ) -> dict:
-    urls = spec.get("granica_rs", {})
+    targets = spec.get("granica_rs", {})
 
     result = {
         "source": "Granica.rs",
-        "to_bih": None,
-        "to_croatia": None,
+        "directions": {},
         "error": None,
     }
 
-    to_bih_url, to_bih_direction = _granica_target(
-        urls.get("to_bih"),
-        "Izlaz - ka BiH",
-    )
+    for direction_key, target in targets.items():
+        default_direction = _granica_default_direction(
+            direction_key,
+        )
 
-    to_hr_url, to_hr_direction = _granica_target(
-        urls.get("to_croatia"),
-        "Izlaz - ka Hrvatskoj",
-    )
+        url, expected_direction = _granica_target(
+            target,
+            default_direction,
+        )
 
-    try:
-        if to_bih_url:
-            result["to_bih"] = fetch_granica_rs_page(
+        if not url:
+            continue
+
+        try:
+            parsed = fetch_granica_rs_page(
                 fetcher,
-                to_bih_url,
-                to_bih_direction,
+                url,
+                expected_direction,
             )
-    except Exception as exc:
-        result["to_bih"] = {
-            "available": False,
-            "label": "Nema podataka",
-            "page_url": to_bih_url,
-            "error": str(exc),
-        }
+        except Exception as exc:
+            parsed = {
+                "available": False,
+                "label": "Nema podataka",
+                "page_url": url,
+                "error": str(exc),
+            }
 
-    try:
-        if to_hr_url:
-            result["to_croatia"] = fetch_granica_rs_page(
-                fetcher,
-                to_hr_url,
-                to_hr_direction,
-            )
-    except Exception as exc:
-        result["to_croatia"] = {
-            "available": False,
-            "label": "Nema podataka",
-            "page_url": to_hr_url,
-            "error": str(exc),
-        }
+        result["directions"][direction_key] = parsed
+
+        # Legacy compatibility:
+        # current Flutter still expects granica_rs.to_bih / to_croatia.
+        # New borders can already expose to_serbia etc. without breaking old UI.
+        result[direction_key] = parsed
 
     return result
 
@@ -1695,7 +1849,7 @@ def main() -> int:
             "granica_rs": {
                 "name": "Granica.rs",
                 "url": "https://granica.rs/",
-                "note": "Procjene sa javnih kamera; 15 HR-BiH prelaza + shared page cache v3",
+                "note": "Generic border directions v1; 15 HR-BiH + 5 BiH-RS prelaza",
             },
         },
         "crossings": {},
@@ -1708,6 +1862,11 @@ def main() -> int:
 
     for key, spec in CROSSINGS.items():
         item = parse_crossing(soup, spec)
+
+        item["border_pair"] = spec.get(
+            "border_pair",
+            "HR-BA",
+        )
 
         item["bihamk"] = bihamk_crossings.get(
             key,
@@ -1783,33 +1942,38 @@ def main() -> int:
     for key, item in result["crossings"].items():
         bihamk = item.get("bihamk", {})
         granica = item.get("granica_rs", {})
-        grs_bih_data = granica.get("to_bih") or {}
-        grs_hr_data = granica.get("to_croatia") or {}
+        direction_parts = []
 
-        grs_bih = grs_bih_data.get(
-            "label",
-            "Nema podataka",
+        for direction_key, direction_data in (
+            granica.get("directions") or {}
+        ).items():
+            direction_data = direction_data or {}
+
+            label = direction_data.get(
+                "label",
+                "Nema podataka",
+            )
+
+            observed = direction_data.get(
+                "observed_text",
+            ) or "bez vremena"
+
+            direction_parts.append(
+                f"{direction_key}={label} ({observed})"
+            )
+
+        direction_text = (
+            "; ".join(direction_parts)
+            if direction_parts
+            else "bez Granica.rs smjerova"
         )
-        grs_hr = grs_hr_data.get(
-            "label",
-            "Nema podataka",
-        )
-
-        grs_bih_time = grs_bih_data.get(
-            "observed_text",
-        ) or "bez vremena"
-
-        grs_hr_time = grs_hr_data.get(
-            "observed_text",
-        ) or "bez vremena"
 
         print(
-            f"- {key}: "
+            f"- {key} [{item.get('border_pair')}]: "
             f"HAK->BiH={item['to_bih']['label']}; "
             f"HAK->HR={item['to_croatia']['label']}; "
             f"BIHAMK={bihamk.get('label', 'Nema podataka')}; "
-            f"Granica.rs->BiH={grs_bih} ({grs_bih_time}); "
-            f"Granica.rs->HR={grs_hr} ({grs_hr_time})"
+            f"Granica.rs: {direction_text}"
         )
 
     return 0
