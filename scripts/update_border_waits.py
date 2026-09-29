@@ -354,6 +354,96 @@ CROSSINGS = {
             },
         },
     },
+    "bajakovo_batrovci": {
+        "name": "Bajakovo – Batrovci",
+        "border_pair": "HR-RS",
+        "aliases": [
+            "Bajakovo",
+        ],
+        "bihamk_names": [],
+        "granica_rs": {
+            "to_serbia": {
+                "url": "https://granica.rs/prelaz/hr-bajakovo",
+                "direction": "Izlaz - ka Srbiji",
+            },
+            "to_croatia": {
+                "url": "https://granica.rs/prelaz/hr-bajakovo",
+                "direction": "Ulaz - ka Hrvatskoj",
+            },
+        },
+    },
+    "tovarnik_sid": {
+        "name": "Tovarnik – Šid",
+        "border_pair": "HR-RS",
+        "aliases": [
+            "Tovarnik",
+        ],
+        "bihamk_names": [],
+        "granica_rs": {
+            "to_serbia": {
+                "url": "https://granica.rs/prelaz/hr-tovarnik",
+                "direction": "Izlaz - ka Srbiji",
+            },
+            "to_croatia": {
+                "url": "https://granica.rs/prelaz/hr-tovarnik",
+                "direction": "Ulaz - ka Hrvatskoj",
+            },
+        },
+    },
+    "ilok_backa_palanka": {
+        "name": "Ilok – Bačka Palanka",
+        "border_pair": "HR-RS",
+        "aliases": [
+            "Ilok",
+        ],
+        "bihamk_names": [],
+        "granica_rs": {
+            "to_serbia": {
+                "url": "https://granica.rs/prelaz/hr-ilok",
+                "direction": "Izlaz - ka Srbiji",
+            },
+            "to_croatia": {
+                "url": "https://granica.rs/prelaz/hr-ilok",
+                "direction": "Ulaz - ka Hrvatskoj",
+            },
+        },
+    },
+    "erdut_bogojevo": {
+        "name": "Erdut – Bogojevo",
+        "border_pair": "HR-RS",
+        "aliases": [
+            "Erdut",
+        ],
+        "bihamk_names": [],
+        "granica_rs": {
+            "to_serbia": {
+                "url": "https://granica.rs/prelaz/hr-erdut",
+                "direction": "Izlaz - ka Srbiji",
+            },
+            "to_croatia": {
+                "url": "https://granica.rs/prelaz/hr-erdut",
+                "direction": "Ulaz - ka Hrvatskoj",
+            },
+        },
+    },
+    "batina_bezdan": {
+        "name": "Batina – Bezdan",
+        "border_pair": "HR-RS",
+        "aliases": [
+            "Batina",
+        ],
+        "bihamk_names": [],
+        "granica_rs": {
+            "to_serbia": {
+                "url": "https://granica.rs/prelaz/hr-batina",
+                "direction": "Izlaz - ka Srbiji",
+            },
+            "to_croatia": {
+                "url": "https://granica.rs/prelaz/hr-batina",
+                "direction": "Ulaz - ka Hrvatskoj",
+            },
+        },
+    },
 }
 
 
@@ -1108,7 +1198,10 @@ def granica_rs_parse_rendered(
         anchors = [
             "cekanje · izlaz iz bih",
             "cekanje - izlaz iz bih",
+            "cekanje · izlaz iz hrvatske",
+            "cekanje - izlaz iz hrvatske",
             "izlaz iz bih",
+            "izlaz iz hrvatske",
             "izlaz - ka srbiji",
         ]
     elif "ulaz - ka srbiji" in direction_norm:
@@ -1849,7 +1942,7 @@ def main() -> int:
             "granica_rs": {
                 "name": "Granica.rs",
                 "url": "https://granica.rs/",
-                "note": "Generic border directions v1; 15 HR-BiH + 5 BiH-RS prelaza",
+                "note": "Generic border directions v2; 15 HR-BiH + 5 BiH-RS + 5 HR-RS prelaza",
             },
         },
         "crossings": {},
