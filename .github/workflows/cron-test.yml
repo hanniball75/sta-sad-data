@@ -1,0 +1,15 @@
+name: Cron test
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "3-58/5 * * * *"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cron works
+        run: |
+          echo "Scheduled workflow radi"
+          date -u
