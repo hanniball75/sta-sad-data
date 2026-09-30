@@ -54,6 +54,27 @@
     .active{color:var(--green);background:rgba(105,240,174,.09);border:1px solid rgba(105,240,174,.38)}
     .ended{color:var(--red);background:rgba(255,102,117,.08);border:1px solid rgba(255,102,117,.35)}
     .waiting{color:var(--yellow);background:rgba(255,216,77,.08);border:1px solid rgba(255,216,77,.35)}
+    .currentLocation{
+      margin-top:10px;padding:12px 14px;border-radius:14px;
+      background:var(--card2);border:1px solid var(--line);
+      font-size:15px;font-weight:900;line-height:1.35
+    }
+    .currentLocation .small{
+      display:block;color:var(--muted);font-size:10px;
+      text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px
+    }
+    .etaBox{
+      margin-top:10px;padding:14px;border-radius:14px;
+      background:rgba(105,240,174,.08);
+      border:1px solid rgba(105,240,174,.32)
+    }
+    .etaBox .small{
+      display:block;color:var(--green);font-size:10px;
+      font-weight:900;text-transform:uppercase;letter-spacing:.5px;
+      margin-bottom:4px
+    }
+    .etaMain{font-size:22px;font-weight:950;color:var(--text)}
+    .etaArrival{font-size:11px;color:var(--muted);margin-top:4px}
     .metricgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
     .metric{background:var(--card2);border-radius:14px;padding:12px}
     .metric .label{font-size:10px;color:var(--muted);font-weight:800;text-transform:uppercase}
@@ -101,6 +122,17 @@
           Lokacija još nije dostupna.
         </div>
 
+        <div id="currentLocation" class="currentLocation">
+          <span class="small">Trenutna lokacija</span>
+          <span id="currentLocationValue">određujem…</span>
+        </div>
+
+        <div id="etaBox" class="etaBox">
+          <span class="small">Procijenjeno vrijeme dolaska</span>
+          <div id="etaRemaining" class="etaMain">Računam…</div>
+          <div id="etaArrival" class="etaArrival">Očekivani dolazak: —</div>
+        </div>
+
         <div id="mapWrap">
           <iframe
             id="map"
@@ -138,7 +170,10 @@
 
       <div class="foot">
         Lokacija se prikazuje samo dok je vlasnik uključio dijeljenje.
-        Stranica se automatski osvježava svakih 30 sekundi.<br>
+        GPS i status se automatski osvježavaju. Naziv grada/države
+        osvježava se rjeđe radi manje potrošnje i manje poziva.
+        ETA je procjena prema preostaloj planiranoj ruti i ne uključuje
+        dodatni live-traffic API.<br>
         Mapa © OpenStreetMap contributors.
       </div>
     </div>
@@ -155,6 +190,9 @@
     const cfg = window.STASAD_SHARE_CONFIG || {};
     const params = new URLSearchParams(location.search);
     const token = params.get('t');
+
+    let lastRenderedRow = null;
+    let lastLabelFetchAt = 0;
 
     const el = id => document.getElementById(id);
 
@@ -191,6 +229,58 @@
       return `prije ${h} h`;
     }
 
+    function etaRemainingText(value, status) {
+      if (status === 'arrived') return 'Stigao';
+      if (!value) return 'Računam…';
+
+      const eta = new Date(value);
+      if (Number.isNaN(eta.getTime())) return 'Računam…';
+
+      const totalMinutes = Math.max(
+        0,
+        Math.ceil((eta.getTime() - Date.now()) / 60000)
+      );
+
+      if (totalMinutes <= 0) return 'manje od 1 min';
+
+      const hours = Math.floor(totalMinutes / 60);
+      const minutes = totalMinutes % 60;
+
+      if (hours === 0) {
+        return `Stižem za ${minutes} min`;
+      }
+
+      if (minutes === 0) {
+        return `Stižem za ${hours} h`;
+      }
+
+      return `Stižem za ${hours} h ${minutes} min`;
+    }
+
+    function etaArrivalText(value, status) {
+      if (status === 'arrived') {
+        return 'Dolazak: stigao';
+      }
+
+      if (!value) {
+        return 'Očekivani dolazak: —';
+      }
+
+      const eta = new Date(value);
+      if (Number.isNaN(eta.getTime())) {
+        return 'Očekivani dolazak: —';
+      }
+
+      const text = new Intl.DateTimeFormat('bs-BA', {
+        day:'2-digit',
+        month:'2-digit',
+        hour:'2-digit',
+        minute:'2-digit'
+      }).format(eta);
+
+      return `Očekivani dolazak: ${text}`;
+    }
+
     function statusInfo(row) {
       if (!row.is_active || row.status === 'stopped') {
         return ['Dijeljenje završeno', 'ended'];
@@ -215,6 +305,8 @@
     }
 
     function render(row) {
+      lastRenderedRow = row;
+
       el('loading').style.display = 'none';
       el('errorBox').style.display = 'none';
       el('content').style.display = 'block';
@@ -227,6 +319,10 @@
       badge.className = `status ${statusClass}`;
 
       el('lastUpdate').textContent = ageText(row.last_location_at);
+      el('etaRemaining').textContent =
+        etaRemainingText(row.eta_at, row.status);
+      el('etaArrival').textContent =
+        etaArrivalText(row.eta_at, row.status);
       el('started').textContent = dateText(row.started_at);
       el('expires').textContent = dateText(row.expires_at);
       el('border').textContent = row.border_name || statusText;
@@ -246,6 +342,69 @@
             ? 'Čekam prvu GPS lokaciju sa telefona…'
             : 'Za ovu završenu sesiju nema dostupne GPS lokacije.';
         el('mapWrap').style.display = 'none';
+      }
+
+      if (!row.is_active) {
+        el('currentLocationValue').textContent =
+          'Dijeljenje završeno';
+
+        if (row.status !== 'arrived') {
+          el('etaRemaining').textContent =
+            'Dijeljenje završeno';
+          el('etaArrival').textContent =
+            'Očekivani dolazak: —';
+        }
+      }
+    }
+
+    async function loadLocationLabel(force = false) {
+      if (!token || !configured()) return;
+      if (!lastRenderedRow || !lastRenderedRow.is_active) return;
+
+      const now = Date.now();
+
+      // Naziv mjesta na telefonu se osvježava najviše svakih
+      // ~15 min; web ga zato ne traži na svakom 30 s refreshu.
+      if (!force &&
+          now - lastLabelFetchAt < 10 * 60 * 1000) {
+        return;
+      }
+
+      lastLabelFetchAt = now;
+
+      try {
+        const response = await fetch(
+          `${cleanBase(cfg.supabaseUrl)}/rest/v1/rpc/get_shared_trip_location_label`,
+          {
+            method: 'POST',
+            headers: {
+              'apikey': cfg.supabasePublishableKey,
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+            body: JSON.stringify({ p_share_token: token })
+          }
+        );
+
+        if (!response.ok) return;
+
+        const data = await response.json();
+        let row = null;
+
+        if (Array.isArray(data) && data.length) row = data[0];
+        else if (data && typeof data === 'object' && !Array.isArray(data)) row = data;
+
+        const label = row && row.current_location_label
+          ? String(row.current_location_label).trim()
+          : '';
+
+        if (label) {
+          el('currentLocationValue').textContent = label;
+        } else if (lastRenderedRow && lastRenderedRow.is_active) {
+          el('currentLocationValue').textContent = 'određujem…';
+        }
+      } catch (_) {
+        // Naziv mjesta je samo dodatak. Mapa i GPS nastavljaju.
       }
     }
 
@@ -297,6 +456,7 @@
         }
 
         render(row);
+        loadLocationLabel();
       } catch (e) {
         showError('Trenutno ne mogu učitati putovanje. Pokušaj ponovo za nekoliko trenutaka.');
       }
