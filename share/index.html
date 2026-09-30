@@ -98,8 +98,8 @@
   <div class="wrap">
     <div class="brand">
       <div class="logo">⌖</div>
-      <h1>Share My Trip</h1>
-      <div class="sub">Šta sad? • privatno dijeljenje putovanja</div>
+      <h1 id="pageTitle">Share My Trip</h1>
+      <div id="pageSubtitle" class="sub">Šta sad? • privatno dijeljenje putovanja</div>
     </div>
 
     <div id="loading" class="card">
@@ -109,7 +109,7 @@
 
     <div id="content" style="display:none">
       <div class="card">
-        <div class="eyebrow">Odredište</div>
+        <div id="destinationLabel" class="eyebrow">Odredište</div>
         <div id="destination" class="destination">—</div>
         <div style="margin-top:12px">
           <span id="statusBadge" class="status waiting">Učitavam…</span>
@@ -148,7 +148,7 @@
             <div id="lastUpdate" class="value">—</div>
           </div>
           <div class="metric">
-            <div class="label">Granica / status</div>
+            <div id="statusMetricLabel" class="label">Granica / status</div>
             <div id="border" class="value">—</div>
           </div>
         </div>
@@ -190,6 +190,7 @@
     const cfg = window.STASAD_SHARE_CONFIG || {};
     const params = new URLSearchParams(location.search);
     const token = params.get('t');
+    const mode = params.get('m') === 'location' ? 'location' : 'trip';
 
     let lastRenderedRow = null;
     let lastLabelFetchAt = 0;
@@ -285,6 +286,11 @@
       if (!row.is_active || row.status === 'stopped') {
         return ['Dijeljenje završeno', 'ended'];
       }
+
+      if (mode === 'location') {
+        return ['Lokacija uživo', 'active'];
+      }
+
       if (row.status === 'arrived') {
         return ['Stigao', 'active'];
       }
@@ -311,7 +317,19 @@
       el('errorBox').style.display = 'none';
       el('content').style.display = 'block';
 
-      el('destination').textContent = row.destination || '—';
+      if (mode === 'location') {
+        document.title = 'Šta sad? • Lokacija uživo';
+        el('pageTitle').textContent = 'Lokacija uživo';
+        el('pageSubtitle').textContent =
+          'Šta sad? • privatno dijeljenje lokacije';
+        el('destinationLabel').textContent = 'Dijeljenje lokacije';
+        el('destination').textContent = 'Trenutna lokacija';
+        el('etaBox').style.display = 'none';
+        el('statusMetricLabel').textContent = 'Status';
+      } else {
+        el('destination').textContent = row.destination || '—';
+        el('etaBox').style.display = 'block';
+      }
 
       const [statusText, statusClass] = statusInfo(row);
       const badge = el('statusBadge');
@@ -319,13 +337,20 @@
       badge.className = `status ${statusClass}`;
 
       el('lastUpdate').textContent = ageText(row.last_location_at);
-      el('etaRemaining').textContent =
-        etaRemainingText(row.eta_at, row.status);
-      el('etaArrival').textContent =
-        etaArrivalText(row.eta_at, row.status);
+
+      if (mode !== 'location') {
+        el('etaRemaining').textContent =
+          etaRemainingText(row.eta_at, row.status);
+        el('etaArrival').textContent =
+          etaArrivalText(row.eta_at, row.status);
+      }
+
       el('started').textContent = dateText(row.started_at);
       el('expires').textContent = dateText(row.expires_at);
-      el('border').textContent = row.border_name || statusText;
+      el('border').textContent =
+        mode === 'location'
+          ? statusText
+          : (row.border_name || statusText);
 
       const lat = Number(row.last_lat);
       const lon = Number(row.last_lon);
@@ -417,7 +442,7 @@
 
     async function loadTrip() {
       if (!token) {
-        showError('Nedostaje privatni token putovanja.');
+        showError(mode === 'location' ? 'Nedostaje privatni token lokacije.' : 'Nedostaje privatni token putovanja.');
         return;
       }
 
@@ -458,7 +483,7 @@
         render(row);
         loadLocationLabel();
       } catch (e) {
-        showError('Trenutno ne mogu učitati putovanje. Pokušaj ponovo za nekoliko trenutaka.');
+        showError(mode === 'location' ? 'Trenutno ne mogu učitati lokaciju. Pokušaj ponovo za nekoliko trenutaka.' : 'Trenutno ne mogu učitati putovanje. Pokušaj ponovo za nekoliko trenutaka.');
       }
     }
 
