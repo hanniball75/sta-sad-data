@@ -162,7 +162,7 @@
             <div id="started" class="value">—</div>
           </div>
           <div class="metric">
-            <div class="label">Važi do</div>
+            <div id="expiresLabel" class="label">Važi do</div>
             <div id="expires" class="value">—</div>
           </div>
         </div>
@@ -172,8 +172,8 @@
         Lokacija se prikazuje samo dok je vlasnik uključio dijeljenje.
         GPS i status se automatski osvježavaju. Naziv grada/države
         osvježava se rjeđe radi manje potrošnje i manje poziva.
-        ETA je procjena prema preostaloj planiranoj ruti i ne uključuje
-        dodatni live-traffic API.<br>
+        <span id="footerTripEta">ETA je procjena prema preostaloj planiranoj ruti i ne uključuje
+        dodatni live-traffic API.<br></span>
         Mapa © OpenStreetMap contributors.
       </div>
     </div>
@@ -282,6 +282,30 @@
       return `Očekivani dolazak: ${text}`;
     }
 
+    function shareRemainingText(value) {
+      if (!value) return '—';
+
+      const expires = new Date(value);
+      if (Number.isNaN(expires.getTime())) return '—';
+
+      const totalMinutes = Math.max(
+        0,
+        Math.ceil(
+          (expires.getTime() - Date.now()) / 60000
+        )
+      );
+
+      if (totalMinutes <= 0) return 'isteklo';
+
+      const hours = Math.floor(totalMinutes / 60);
+      const minutes = totalMinutes % 60;
+
+      if (hours === 0) return `${minutes} min`;
+      if (minutes === 0) return `${hours} h`;
+
+      return `${hours} h ${minutes} min`;
+    }
+
     function statusInfo(row) {
       if (!row.is_active || row.status === 'stopped') {
         return ['Dijeljenje završeno', 'ended'];
@@ -326,7 +350,11 @@
         el('destination').textContent = 'Trenutna lokacija';
         el('etaBox').style.display = 'none';
         el('statusMetricLabel').textContent = 'Status';
+        el('expiresLabel').textContent = 'Aktivno još';
+        el('footerTripEta').style.display = 'none';
       } else {
+        el('footerTripEta').style.display = '';
+        el('expiresLabel').textContent = 'Važi do';
         el('destination').textContent = row.destination || '—';
         el('etaBox').style.display = 'block';
       }
@@ -346,7 +374,10 @@
       }
 
       el('started').textContent = dateText(row.started_at);
-      el('expires').textContent = dateText(row.expires_at);
+      el('expires').textContent =
+        mode === 'location' && row.is_active
+          ? shareRemainingText(row.expires_at)
+          : dateText(row.expires_at);
       el('border').textContent =
         mode === 'location'
           ? statusText
