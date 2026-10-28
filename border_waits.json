@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-10-28T07:31:17Z",
+  "generated_at": "2026-10-28T07:40:59Z",
   "source": {
     "name": "HAK / MUP RH",
     "url": "https://www.hak.hr/info/stanje-na-cestama/",
@@ -19,8 +19,8 @@
     "bihamk": {
       "name": "BIHAMK",
       "url": "https://bihamk.ba/spi/stanje-na-cesti-u-bih/granicni-prijelazi",
-      "source_updated": "28.10.2026. u 06:28",
-      "source_updated_at": "2026-10-28T06:28:00+01:00"
+      "source_updated": "28.10.2026. u 08:33",
+      "source_updated_at": "2026-10-28T08:33:00+01:00"
     },
     "granica_rs": {
       "name": "Granica.rs",
@@ -52,8 +52,8 @@
         "wait_minutes": 30,
         "bound": "upper",
         "scope": "both_or_unspecified",
-        "observed_at": "2026-10-28T06:28:00+01:00",
-        "observed_text": "28.10.2026. u 06:28",
+        "observed_at": "2026-10-28T08:33:00+01:00",
+        "observed_text": "28.10.2026. u 08:33",
         "raw_text": "Privremeno je za saobraćaj motornih vozila otvoren novi granični prelaz Gradiška/Gornji Varoš. Zadržavanja putničkih vozila nisu duža od 30 minuta."
       },
       "granica_rs": {
@@ -61,10 +61,10 @@
         "directions": {
           "to_bih": {
             "available": true,
-            "label": "10-20 min",
+            "label": "10 min",
             "wait_minutes_min": 10,
-            "wait_minutes_max": 20,
-            "bound": "range",
+            "wait_minutes_max": 10,
+            "bound": "estimate",
             "congestion": null,
             "observed_at": null,
             "observed_text": null,
@@ -77,9 +77,9 @@
           },
           "to_croatia": {
             "available": true,
-            "label": "5 min",
-            "wait_minutes_min": 5,
-            "wait_minutes_max": 5,
+            "label": "10 min",
+            "wait_minutes_min": 10,
+            "wait_minutes_max": 10,
             "bound": "estimate",
             "congestion": null,
             "observed_at": null,
@@ -95,10 +95,10 @@
         "error": null,
         "to_bih": {
           "available": true,
-          "label": "10-20 min",
+          "label": "10 min",
           "wait_minutes_min": 10,
-          "wait_minutes_max": 20,
-          "bound": "range",
+          "wait_minutes_max": 10,
+          "bound": "estimate",
           "congestion": null,
           "observed_at": null,
           "observed_text": null,
@@ -111,9 +111,9 @@
         },
         "to_croatia": {
           "available": true,
-          "label": "5 min",
-          "wait_minutes_min": 5,
-          "wait_minutes_max": 5,
+          "label": "10 min",
+          "wait_minutes_min": 10,
+          "wait_minutes_max": 10,
           "bound": "estimate",
           "congestion": null,
           "observed_at": null,
@@ -135,7 +135,7 @@
         "label": "1 h",
         "wait_minutes": 60,
         "observed_at": "2026-10-28T06:22:11+01:00",
-        "observed_text": "28.10.2026. 6:22:11"
+        "observed_text": "28.10.2026 06:22:11"
       },
       "to_croatia": {
         "label": "Nema podataka",
@@ -150,8 +150,8 @@
         "wait_minutes": 30,
         "bound": "upper",
         "scope": "both_or_unspecified",
-        "observed_at": "2026-10-28T06:28:00+01:00",
-        "observed_text": "28.10.2026. u 06:28",
+        "observed_at": "2026-10-28T08:33:00+01:00",
+        "observed_text": "28.10.2026. u 08:33",
         "raw_text": "Zadržavanja putničkih vozila nisu duža od 30 minuta."
       },
       "granica_rs": {
@@ -159,10 +159,10 @@
         "directions": {
           "to_bih": {
             "available": true,
-            "label": "10-20 min",
+            "label": "10 min",
             "wait_minutes_min": 10,
-            "wait_minutes_max": 20,
-            "bound": "range",
+            "wait_minutes_max": 10,
+            "bound": "estimate",
             "congestion": null,
             "observed_at": null,
             "observed_text": null,
@@ -175,9 +175,9 @@
           },
           "to_croatia": {
             "available": true,
-            "label": "1 min",
-            "wait_minutes_min": 1,
-            "wait_minutes_max": 1,
+            "label": "10 min",
+            "wait_minutes_min": 10,
+            "wait_minutes_max": 10,
             "bound": "estimate",
             "congestion": null,
             "observed_at": null,
@@ -193,10 +193,10 @@
         "error": null,
         "to_bih": {
           "available": true,
-          "label": "10-20 min",
+          "label": "10 min",
           "wait_minutes_min": 10,
-          "wait_minutes_max": 20,
-          "bound": "range",
+          "wait_minutes_max": 10,
+          "bound": "estimate",
           "congestion": null,
           "observed_at": null,
           "observed_text": null,
@@ -209,9 +209,9 @@
         },
         "to_croatia": {
           "available": true,
-          "label": "1 min",
-          "wait_minutes_min": 1,
-          "wait_minutes_max": 1,
+          "label": "10 min",
+          "wait_minutes_min": 10,
+          "wait_minutes_max": 10,
           "bound": "estimate",
           "congestion": null,
           "observed_at": null,
@@ -233,7 +233,7 @@
         "label": "1 h",
         "wait_minutes": 60,
         "observed_at": "2026-10-28T07:19:01+01:00",
-        "observed_text": "28.10.2026. 7:19:01"
+        "observed_text": "28.10.2026 07:19:01"
       },
       "to_croatia": {
         "label": "Nema podataka",
@@ -248,8 +248,8 @@
         "wait_minutes": 30,
         "bound": "upper",
         "scope": "both_or_unspecified",
-        "observed_at": "2026-10-28T06:28:00+01:00",
-        "observed_text": "28.10.2026. u 06:28",
+        "observed_at": "2026-10-28T08:33:00+01:00",
+        "observed_text": "28.10.2026. u 08:33",
         "raw_text": "Zadržavanja putničkih vozila nisu duža od 30 minuta."
       },
       "granica_rs": {
@@ -257,9 +257,9 @@
         "directions": {
           "to_bih": {
             "available": true,
-            "label": "5 min",
-            "wait_minutes_min": 5,
-            "wait_minutes_max": 5,
+            "label": "10 min",
+            "wait_minutes_min": 10,
+            "wait_minutes_max": 10,
             "bound": "estimate",
             "congestion": null,
             "observed_at": null,
@@ -273,9 +273,9 @@
           },
           "to_croatia": {
             "available": true,
-            "label": "5 min",
-            "wait_minutes_min": 5,
-            "wait_minutes_max": 5,
+            "label": "10 min",
+            "wait_minutes_min": 10,
+            "wait_minutes_max": 10,
             "bound": "estimate",
             "congestion": null,
             "observed_at": null,
@@ -291,9 +291,9 @@
         "error": null,
         "to_bih": {
           "available": true,
-          "label": "5 min",
-          "wait_minutes_min": 5,
-          "wait_minutes_max": 5,
+          "label": "10 min",
+          "wait_minutes_min": 10,
+          "wait_minutes_max": 10,
           "bound": "estimate",
           "congestion": null,
           "observed_at": null,
@@ -307,9 +307,9 @@
         },
         "to_croatia": {
           "available": true,
-          "label": "5 min",
-          "wait_minutes_min": 5,
-          "wait_minutes_max": 5,
+          "label": "10 min",
+          "wait_minutes_min": 10,
+          "wait_minutes_max": 10,
           "bound": "estimate",
           "congestion": null,
           "observed_at": null,
@@ -346,8 +346,8 @@
         "wait_minutes": 30,
         "bound": "upper",
         "scope": "both_or_unspecified",
-        "observed_at": "2026-10-28T06:28:00+01:00",
-        "observed_text": "28.10.2026. u 06:28",
+        "observed_at": "2026-10-28T08:33:00+01:00",
+        "observed_text": "28.10.2026. u 08:33",
         "raw_text": "Zadržavanja putničkih vozila nisu duža od 30 minuta."
       },
       "granica_rs": {
@@ -355,9 +355,9 @@
         "directions": {
           "to_bih": {
             "available": true,
-            "label": "5 min",
-            "wait_minutes_min": 5,
-            "wait_minutes_max": 5,
+            "label": "10 min",
+            "wait_minutes_min": 10,
+            "wait_minutes_max": 10,
             "bound": "estimate",
             "congestion": null,
             "observed_at": null,
@@ -388,9 +388,9 @@
         "error": null,
         "to_bih": {
           "available": true,
-          "label": "5 min",
-          "wait_minutes_min": 5,
-          "wait_minutes_max": 5,
+          "label": "10 min",
+          "wait_minutes_min": 10,
+          "wait_minutes_max": 10,
           "bound": "estimate",
           "congestion": null,
           "observed_at": null,
@@ -442,8 +442,8 @@
         "wait_minutes": null,
         "bound": null,
         "scope": "unspecified",
-        "observed_at": "2026-10-28T06:28:00+01:00",
-        "observed_text": "28.10.2026. u 06:28",
+        "observed_at": "2026-10-28T08:33:00+01:00",
+        "observed_text": "28.10.2026. u 08:33",
         "raw_text": null
       },
       "granica_rs": {
@@ -451,9 +451,9 @@
         "directions": {
           "to_bih": {
             "available": true,
-            "label": "5 min",
-            "wait_minutes_min": 5,
-            "wait_minutes_max": 5,
+            "label": "10 min",
+            "wait_minutes_min": 10,
+            "wait_minutes_max": 10,
             "bound": "estimate",
             "congestion": null,
             "observed_at": null,
@@ -467,9 +467,9 @@
           },
           "to_croatia": {
             "available": true,
-            "label": "5 min",
-            "wait_minutes_min": 5,
-            "wait_minutes_max": 5,
+            "label": "10 min",
+            "wait_minutes_min": 10,
+            "wait_minutes_max": 10,
             "bound": "estimate",
             "congestion": null,
             "observed_at": null,
@@ -485,9 +485,9 @@
         "error": null,
         "to_bih": {
           "available": true,
-          "label": "5 min",
-          "wait_minutes_min": 5,
-          "wait_minutes_max": 5,
+          "label": "10 min",
+          "wait_minutes_min": 10,
+          "wait_minutes_max": 10,
           "bound": "estimate",
           "congestion": null,
           "observed_at": null,
@@ -501,9 +501,9 @@
         },
         "to_croatia": {
           "available": true,
-          "label": "5 min",
-          "wait_minutes_min": 5,
-          "wait_minutes_max": 5,
+          "label": "10 min",
+          "wait_minutes_min": 10,
+          "wait_minutes_max": 10,
           "bound": "estimate",
           "congestion": null,
           "observed_at": null,
@@ -540,8 +540,8 @@
         "wait_minutes": 30,
         "bound": "upper",
         "scope": "both_or_unspecified",
-        "observed_at": "2026-10-28T06:28:00+01:00",
-        "observed_text": "28.10.2026. u 06:28",
+        "observed_at": "2026-10-28T08:33:00+01:00",
+        "observed_text": "28.10.2026. u 08:33",
         "raw_text": "Zadržavanja putničkih vozila nisu duža od 30 minuta."
       },
       "granica_rs": {
@@ -549,10 +549,10 @@
         "directions": {
           "to_bih": {
             "available": true,
-            "label": "10-20 min",
+            "label": "10 min",
             "wait_minutes_min": 10,
-            "wait_minutes_max": 20,
-            "bound": "range",
+            "wait_minutes_max": 10,
+            "bound": "estimate",
             "congestion": null,
             "observed_at": null,
             "observed_text": null,
@@ -565,9 +565,9 @@
           },
           "to_croatia": {
             "available": true,
-            "label": "1 min",
-            "wait_minutes_min": 1,
-            "wait_minutes_max": 1,
+            "label": "10 min",
+            "wait_minutes_min": 10,
+            "wait_minutes_max": 10,
             "bound": "estimate",
             "congestion": null,
             "observed_at": null,
@@ -583,10 +583,10 @@
         "error": null,
         "to_bih": {
           "available": true,
-          "label": "10-20 min",
+          "label": "10 min",
           "wait_minutes_min": 10,
-          "wait_minutes_max": 20,
-          "bound": "range",
+          "wait_minutes_max": 10,
+          "bound": "estimate",
           "congestion": null,
           "observed_at": null,
           "observed_text": null,
@@ -599,9 +599,9 @@
         },
         "to_croatia": {
           "available": true,
-          "label": "1 min",
-          "wait_minutes_min": 1,
-          "wait_minutes_max": 1,
+          "label": "10 min",
+          "wait_minutes_min": 10,
+          "wait_minutes_max": 10,
           "bound": "estimate",
           "congestion": null,
           "observed_at": null,
@@ -638,8 +638,8 @@
         "wait_minutes": 30,
         "bound": "upper",
         "scope": "both_or_unspecified",
-        "observed_at": "2026-10-28T06:28:00+01:00",
-        "observed_text": "28.10.2026. u 06:28",
+        "observed_at": "2026-10-28T08:33:00+01:00",
+        "observed_text": "28.10.2026. u 08:33",
         "raw_text": "Zadržavanja putničkih vozila nisu duža od 30 minuta."
       },
       "granica_rs": {
@@ -647,9 +647,9 @@
         "directions": {
           "to_bih": {
             "available": true,
-            "label": "1 min",
-            "wait_minutes_min": 1,
-            "wait_minutes_max": 1,
+            "label": "10 min",
+            "wait_minutes_min": 10,
+            "wait_minutes_max": 10,
             "bound": "estimate",
             "congestion": null,
             "observed_at": null,
@@ -663,9 +663,9 @@
           },
           "to_croatia": {
             "available": true,
-            "label": "1 min",
-            "wait_minutes_min": 1,
-            "wait_minutes_max": 1,
+            "label": "10 min",
+            "wait_minutes_min": 10,
+            "wait_minutes_max": 10,
             "bound": "estimate",
             "congestion": null,
             "observed_at": null,
@@ -681,9 +681,9 @@
         "error": null,
         "to_bih": {
           "available": true,
-          "label": "1 min",
-          "wait_minutes_min": 1,
-          "wait_minutes_max": 1,
+          "label": "10 min",
+          "wait_minutes_min": 10,
+          "wait_minutes_max": 10,
           "bound": "estimate",
           "congestion": null,
           "observed_at": null,
@@ -697,9 +697,9 @@
         },
         "to_croatia": {
           "available": true,
-          "label": "1 min",
-          "wait_minutes_min": 1,
-          "wait_minutes_max": 1,
+          "label": "10 min",
+          "wait_minutes_min": 10,
+          "wait_minutes_max": 10,
           "bound": "estimate",
           "congestion": null,
           "observed_at": null,
@@ -736,8 +736,8 @@
         "wait_minutes": 30,
         "bound": "upper",
         "scope": "both_or_unspecified",
-        "observed_at": "2026-10-28T06:28:00+01:00",
-        "observed_text": "28.10.2026. u 06:28",
+        "observed_at": "2026-10-28T08:33:00+01:00",
+        "observed_text": "28.10.2026. u 08:33",
         "raw_text": "Zadržavanja putničkih vozila nisu duža od 30 minuta. Granični prelaz Brčko od 19.06.2025. godine otvoren je za putnička vozila do 3,5 tone."
       },
       "granica_rs": {
@@ -745,9 +745,9 @@
         "directions": {
           "to_bih": {
             "available": true,
-            "label": "1 min",
-            "wait_minutes_min": 1,
-            "wait_minutes_max": 1,
+            "label": "10 min",
+            "wait_minutes_min": 10,
+            "wait_minutes_max": 10,
             "bound": "estimate",
             "congestion": null,
             "observed_at": null,
@@ -763,9 +763,9 @@
         "error": null,
         "to_bih": {
           "available": true,
-          "label": "1 min",
-          "wait_minutes_min": 1,
-          "wait_minutes_max": 1,
+          "label": "10 min",
+          "wait_minutes_min": 10,
+          "wait_minutes_max": 10,
           "bound": "estimate",
           "congestion": null,
           "observed_at": null,
@@ -802,8 +802,8 @@
         "wait_minutes": 30,
         "bound": "upper",
         "scope": "both_or_unspecified",
-        "observed_at": "2026-10-28T06:28:00+01:00",
-        "observed_text": "28.10.2026. u 06:28",
+        "observed_at": "2026-10-28T08:33:00+01:00",
+        "observed_text": "28.10.2026. u 08:33",
         "raw_text": "Zadržavanja putničkih vozila nisu duža od 30 minuta."
       },
       "granica_rs": {
@@ -811,9 +811,9 @@
         "directions": {
           "to_bih": {
             "available": true,
-            "label": "1 min",
-            "wait_minutes_min": 1,
-            "wait_minutes_max": 1,
+            "label": "10 min",
+            "wait_minutes_min": 10,
+            "wait_minutes_max": 10,
             "bound": "estimate",
             "congestion": null,
             "observed_at": null,
@@ -827,9 +827,9 @@
           },
           "to_croatia": {
             "available": true,
-            "label": "1 min",
-            "wait_minutes_min": 1,
-            "wait_minutes_max": 1,
+            "label": "10 min",
+            "wait_minutes_min": 10,
+            "wait_minutes_max": 10,
             "bound": "estimate",
             "congestion": null,
             "observed_at": null,
@@ -845,9 +845,9 @@
         "error": null,
         "to_bih": {
           "available": true,
-          "label": "1 min",
-          "wait_minutes_min": 1,
-          "wait_minutes_max": 1,
+          "label": "10 min",
+          "wait_minutes_min": 10,
+          "wait_minutes_max": 10,
           "bound": "estimate",
           "congestion": null,
           "observed_at": null,
@@ -861,9 +861,9 @@
         },
         "to_croatia": {
           "available": true,
-          "label": "1 min",
-          "wait_minutes_min": 1,
-          "wait_minutes_max": 1,
+          "label": "10 min",
+          "wait_minutes_min": 10,
+          "wait_minutes_max": 10,
           "bound": "estimate",
           "congestion": null,
           "observed_at": null,
@@ -900,8 +900,8 @@
         "wait_minutes": null,
         "bound": null,
         "scope": "unspecified",
-        "observed_at": "2026-10-28T06:28:00+01:00",
-        "observed_text": "28.10.2026. u 06:28",
+        "observed_at": "2026-10-28T08:33:00+01:00",
+        "observed_text": "28.10.2026. u 08:33",
         "raw_text": null
       },
       "granica_rs": {
@@ -909,9 +909,9 @@
         "directions": {
           "to_bih": {
             "available": true,
-            "label": "1 min",
-            "wait_minutes_min": 1,
-            "wait_minutes_max": 1,
+            "label": "10 min",
+            "wait_minutes_min": 10,
+            "wait_minutes_max": 10,
             "bound": "estimate",
             "congestion": null,
             "observed_at": null,
@@ -925,9 +925,9 @@
           },
           "to_croatia": {
             "available": true,
-            "label": "1 min",
-            "wait_minutes_min": 1,
-            "wait_minutes_max": 1,
+            "label": "10 min",
+            "wait_minutes_min": 10,
+            "wait_minutes_max": 10,
             "bound": "estimate",
             "congestion": null,
             "observed_at": null,
@@ -943,9 +943,9 @@
         "error": null,
         "to_bih": {
           "available": true,
-          "label": "1 min",
-          "wait_minutes_min": 1,
-          "wait_minutes_max": 1,
+          "label": "10 min",
+          "wait_minutes_min": 10,
+          "wait_minutes_max": 10,
           "bound": "estimate",
           "congestion": null,
           "observed_at": null,
@@ -959,9 +959,9 @@
         },
         "to_croatia": {
           "available": true,
-          "label": "1 min",
-          "wait_minutes_min": 1,
-          "wait_minutes_max": 1,
+          "label": "10 min",
+          "wait_minutes_min": 10,
+          "wait_minutes_max": 10,
           "bound": "estimate",
           "congestion": null,
           "observed_at": null,
@@ -998,8 +998,8 @@
         "wait_minutes": 30,
         "bound": "upper",
         "scope": "both_or_unspecified",
-        "observed_at": "2026-10-28T06:28:00+01:00",
-        "observed_text": "28.10.2026. u 06:28",
+        "observed_at": "2026-10-28T08:33:00+01:00",
+        "observed_text": "28.10.2026. u 08:33",
         "raw_text": "Zadržavanja putničkih vozila nisu duža od 30 minuta."
       },
       "granica_rs": {
@@ -1007,9 +1007,9 @@
         "directions": {
           "to_bih": {
             "available": true,
-            "label": "1 min",
-            "wait_minutes_min": 1,
-            "wait_minutes_max": 1,
+            "label": "10 min",
+            "wait_minutes_min": 10,
+            "wait_minutes_max": 10,
             "bound": "estimate",
             "congestion": null,
             "observed_at": null,
@@ -1023,9 +1023,9 @@
           },
           "to_croatia": {
             "available": true,
-            "label": "1 min",
-            "wait_minutes_min": 1,
-            "wait_minutes_max": 1,
+            "label": "10 min",
+            "wait_minutes_min": 10,
+            "wait_minutes_max": 10,
             "bound": "estimate",
             "congestion": null,
             "observed_at": null,
@@ -1041,9 +1041,9 @@
         "error": null,
         "to_bih": {
           "available": true,
-          "label": "1 min",
-          "wait_minutes_min": 1,
-          "wait_minutes_max": 1,
+          "label": "10 min",
+          "wait_minutes_min": 10,
+          "wait_minutes_max": 10,
           "bound": "estimate",
           "congestion": null,
           "observed_at": null,
@@ -1057,9 +1057,9 @@
         },
         "to_croatia": {
           "available": true,
-          "label": "1 min",
-          "wait_minutes_min": 1,
-          "wait_minutes_max": 1,
+          "label": "10 min",
+          "wait_minutes_min": 10,
+          "wait_minutes_max": 10,
           "bound": "estimate",
           "congestion": null,
           "observed_at": null,
@@ -1096,8 +1096,8 @@
         "wait_minutes": 30,
         "bound": "upper",
         "scope": "both_or_unspecified",
-        "observed_at": "2026-10-28T06:28:00+01:00",
-        "observed_text": "28.10.2026. u 06:28",
+        "observed_at": "2026-10-28T08:33:00+01:00",
+        "observed_text": "28.10.2026. u 08:33",
         "raw_text": "Zadržavanja putničkih vozila nisu duža od 30 minuta."
       },
       "granica_rs": {
@@ -1105,9 +1105,9 @@
         "directions": {
           "to_bih": {
             "available": true,
-            "label": "1 min",
-            "wait_minutes_min": 1,
-            "wait_minutes_max": 1,
+            "label": "10 min",
+            "wait_minutes_min": 10,
+            "wait_minutes_max": 10,
             "bound": "estimate",
             "congestion": null,
             "observed_at": null,
@@ -1121,9 +1121,9 @@
           },
           "to_croatia": {
             "available": true,
-            "label": "1 min",
-            "wait_minutes_min": 1,
-            "wait_minutes_max": 1,
+            "label": "10 min",
+            "wait_minutes_min": 10,
+            "wait_minutes_max": 10,
             "bound": "estimate",
             "congestion": null,
             "observed_at": null,
@@ -1139,9 +1139,9 @@
         "error": null,
         "to_bih": {
           "available": true,
-          "label": "1 min",
-          "wait_minutes_min": 1,
-          "wait_minutes_max": 1,
+          "label": "10 min",
+          "wait_minutes_min": 10,
+          "wait_minutes_max": 10,
           "bound": "estimate",
           "congestion": null,
           "observed_at": null,
@@ -1155,9 +1155,9 @@
         },
         "to_croatia": {
           "available": true,
-          "label": "1 min",
-          "wait_minutes_min": 1,
-          "wait_minutes_max": 1,
+          "label": "10 min",
+          "wait_minutes_min": 10,
+          "wait_minutes_max": 10,
           "bound": "estimate",
           "congestion": null,
           "observed_at": null,
@@ -1194,8 +1194,8 @@
         "wait_minutes": 30,
         "bound": "upper",
         "scope": "both_or_unspecified",
-        "observed_at": "2026-10-28T06:28:00+01:00",
-        "observed_text": "28.10.2026. u 06:28",
+        "observed_at": "2026-10-28T08:33:00+01:00",
+        "observed_text": "28.10.2026. u 08:33",
         "raw_text": "Zadržavanja putničkih vozila nisu duža od 30 minuta."
       },
       "granica_rs": {
@@ -1203,9 +1203,9 @@
         "directions": {
           "to_bih": {
             "available": true,
-            "label": "1 min",
-            "wait_minutes_min": 1,
-            "wait_minutes_max": 1,
+            "label": "10 min",
+            "wait_minutes_min": 10,
+            "wait_minutes_max": 10,
             "bound": "estimate",
             "congestion": null,
             "observed_at": null,
@@ -1219,9 +1219,9 @@
           },
           "to_croatia": {
             "available": true,
-            "label": "1 min",
-            "wait_minutes_min": 1,
-            "wait_minutes_max": 1,
+            "label": "10 min",
+            "wait_minutes_min": 10,
+            "wait_minutes_max": 10,
             "bound": "estimate",
             "congestion": null,
             "observed_at": null,
@@ -1237,9 +1237,9 @@
         "error": null,
         "to_bih": {
           "available": true,
-          "label": "1 min",
-          "wait_minutes_min": 1,
-          "wait_minutes_max": 1,
+          "label": "10 min",
+          "wait_minutes_min": 10,
+          "wait_minutes_max": 10,
           "bound": "estimate",
           "congestion": null,
           "observed_at": null,
@@ -1253,9 +1253,9 @@
         },
         "to_croatia": {
           "available": true,
-          "label": "1 min",
-          "wait_minutes_min": 1,
-          "wait_minutes_max": 1,
+          "label": "10 min",
+          "wait_minutes_min": 10,
+          "wait_minutes_max": 10,
           "bound": "estimate",
           "congestion": null,
           "observed_at": null,
@@ -1292,8 +1292,8 @@
         "wait_minutes": 30,
         "bound": "upper",
         "scope": "both_or_unspecified",
-        "observed_at": "2026-10-28T06:28:00+01:00",
-        "observed_text": "28.10.2026. u 06:28",
+        "observed_at": "2026-10-28T08:33:00+01:00",
+        "observed_text": "28.10.2026. u 08:33",
         "raw_text": "Zadržavanja putničkih vozila nisu duža od 30 minuta."
       },
       "granica_rs": {
@@ -1301,9 +1301,9 @@
         "directions": {
           "to_bih": {
             "available": true,
-            "label": "1 min",
-            "wait_minutes_min": 1,
-            "wait_minutes_max": 1,
+            "label": "10 min",
+            "wait_minutes_min": 10,
+            "wait_minutes_max": 10,
             "bound": "estimate",
             "congestion": null,
             "observed_at": null,
@@ -1317,9 +1317,9 @@
           },
           "to_croatia": {
             "available": true,
-            "label": "1 min",
-            "wait_minutes_min": 1,
-            "wait_minutes_max": 1,
+            "label": "10 min",
+            "wait_minutes_min": 10,
+            "wait_minutes_max": 10,
             "bound": "estimate",
             "congestion": null,
             "observed_at": null,
@@ -1335,9 +1335,9 @@
         "error": null,
         "to_bih": {
           "available": true,
-          "label": "1 min",
-          "wait_minutes_min": 1,
-          "wait_minutes_max": 1,
+          "label": "10 min",
+          "wait_minutes_min": 10,
+          "wait_minutes_max": 10,
           "bound": "estimate",
           "congestion": null,
           "observed_at": null,
@@ -1351,9 +1351,9 @@
         },
         "to_croatia": {
           "available": true,
-          "label": "1 min",
-          "wait_minutes_min": 1,
-          "wait_minutes_max": 1,
+          "label": "10 min",
+          "wait_minutes_min": 10,
+          "wait_minutes_max": 10,
           "bound": "estimate",
           "congestion": null,
           "observed_at": null,
@@ -1390,8 +1390,8 @@
         "wait_minutes": 30,
         "bound": "upper",
         "scope": "both_or_unspecified",
-        "observed_at": "2026-10-28T06:28:00+01:00",
-        "observed_text": "28.10.2026. u 06:28",
+        "observed_at": "2026-10-28T08:33:00+01:00",
+        "observed_text": "28.10.2026. u 08:33",
         "raw_text": "Zadržavanja putničkih vozila nisu duža od 30 minuta."
       },
       "granica_rs": {
@@ -1399,9 +1399,9 @@
         "directions": {
           "to_bih": {
             "available": true,
-            "label": "1 min",
-            "wait_minutes_min": 1,
-            "wait_minutes_max": 1,
+            "label": "10 min",
+            "wait_minutes_min": 10,
+            "wait_minutes_max": 10,
             "bound": "estimate",
             "congestion": null,
             "observed_at": null,
@@ -1415,9 +1415,9 @@
           },
           "to_croatia": {
             "available": true,
-            "label": "1 min",
-            "wait_minutes_min": 1,
-            "wait_minutes_max": 1,
+            "label": "10 min",
+            "wait_minutes_min": 10,
+            "wait_minutes_max": 10,
             "bound": "estimate",
             "congestion": null,
             "observed_at": null,
@@ -1433,9 +1433,9 @@
         "error": null,
         "to_bih": {
           "available": true,
-          "label": "1 min",
-          "wait_minutes_min": 1,
-          "wait_minutes_max": 1,
+          "label": "10 min",
+          "wait_minutes_min": 10,
+          "wait_minutes_max": 10,
           "bound": "estimate",
           "congestion": null,
           "observed_at": null,
@@ -1449,9 +1449,9 @@
         },
         "to_croatia": {
           "available": true,
-          "label": "1 min",
-          "wait_minutes_min": 1,
-          "wait_minutes_max": 1,
+          "label": "10 min",
+          "wait_minutes_min": 10,
+          "wait_minutes_max": 10,
           "bound": "estimate",
           "congestion": null,
           "observed_at": null,
@@ -1488,8 +1488,8 @@
         "wait_minutes": null,
         "bound": null,
         "scope": "unspecified",
-        "observed_at": "2026-10-28T06:28:00+01:00",
-        "observed_text": "28.10.2026. u 06:28",
+        "observed_at": "2026-10-28T08:33:00+01:00",
+        "observed_text": "28.10.2026. u 08:33",
         "raw_text": null
       },
       "granica_rs": {
@@ -1497,9 +1497,9 @@
         "directions": {
           "to_serbia": {
             "available": true,
-            "label": "1 min",
-            "wait_minutes_min": 1,
-            "wait_minutes_max": 1,
+            "label": "11 min",
+            "wait_minutes_min": 11,
+            "wait_minutes_max": 11,
             "bound": "estimate",
             "congestion": null,
             "observed_at": null,
@@ -1513,9 +1513,9 @@
           },
           "to_bih": {
             "available": true,
-            "label": "1 min",
-            "wait_minutes_min": 1,
-            "wait_minutes_max": 1,
+            "label": "11 min",
+            "wait_minutes_min": 11,
+            "wait_minutes_max": 11,
             "bound": "estimate",
             "congestion": null,
             "observed_at": null,
@@ -1531,9 +1531,9 @@
         "error": null,
         "to_serbia": {
           "available": true,
-          "label": "1 min",
-          "wait_minutes_min": 1,
-          "wait_minutes_max": 1,
+          "label": "11 min",
+          "wait_minutes_min": 11,
+          "wait_minutes_max": 11,
           "bound": "estimate",
           "congestion": null,
           "observed_at": null,
@@ -1547,9 +1547,9 @@
         },
         "to_bih": {
           "available": true,
-          "label": "1 min",
-          "wait_minutes_min": 1,
-          "wait_minutes_max": 1,
+          "label": "11 min",
+          "wait_minutes_min": 11,
+          "wait_minutes_max": 11,
           "bound": "estimate",
           "congestion": null,
           "observed_at": null,
@@ -1586,8 +1586,8 @@
         "wait_minutes": 30,
         "bound": "upper",
         "scope": "both_or_unspecified",
-        "observed_at": "2026-10-28T06:28:00+01:00",
-        "observed_text": "28.10.2026. u 06:28",
+        "observed_at": "2026-10-28T08:33:00+01:00",
+        "observed_text": "28.10.2026. u 08:33",
         "raw_text": "Zadržavanja putničkih vozila nisu duža od 30 minuta."
       },
       "granica_rs": {
@@ -1595,9 +1595,9 @@
         "directions": {
           "to_serbia": {
             "available": true,
-            "label": "1 min",
-            "wait_minutes_min": 1,
-            "wait_minutes_max": 1,
+            "label": "11 min",
+            "wait_minutes_min": 11,
+            "wait_minutes_max": 11,
             "bound": "estimate",
             "congestion": null,
             "observed_at": null,
@@ -1611,9 +1611,9 @@
           },
           "to_bih": {
             "available": true,
-            "label": "1 min",
-            "wait_minutes_min": 1,
-            "wait_minutes_max": 1,
+            "label": "11 min",
+            "wait_minutes_min": 11,
+            "wait_minutes_max": 11,
             "bound": "estimate",
             "congestion": null,
             "observed_at": null,
@@ -1629,9 +1629,9 @@
         "error": null,
         "to_serbia": {
           "available": true,
-          "label": "1 min",
-          "wait_minutes_min": 1,
-          "wait_minutes_max": 1,
+          "label": "11 min",
+          "wait_minutes_min": 11,
+          "wait_minutes_max": 11,
           "bound": "estimate",
           "congestion": null,
           "observed_at": null,
@@ -1645,9 +1645,9 @@
         },
         "to_bih": {
           "available": true,
-          "label": "1 min",
-          "wait_minutes_min": 1,
-          "wait_minutes_max": 1,
+          "label": "11 min",
+          "wait_minutes_min": 11,
+          "wait_minutes_max": 11,
           "bound": "estimate",
           "congestion": null,
           "observed_at": null,
@@ -1684,8 +1684,8 @@
         "wait_minutes": 30,
         "bound": "upper",
         "scope": "both_or_unspecified",
-        "observed_at": "2026-10-28T06:28:00+01:00",
-        "observed_text": "28.10.2026. u 06:28",
+        "observed_at": "2026-10-28T08:33:00+01:00",
+        "observed_text": "28.10.2026. u 08:33",
         "raw_text": "Zadržavanja putničkih vozila nisu duža od 30 minuta. Na graničnom prelazu Šepak zabranjen je saobraćaj za sva teretna vozila."
       },
       "granica_rs": {
@@ -1693,9 +1693,9 @@
         "directions": {
           "to_serbia": {
             "available": true,
-            "label": "1 min",
-            "wait_minutes_min": 1,
-            "wait_minutes_max": 1,
+            "label": "11 min",
+            "wait_minutes_min": 11,
+            "wait_minutes_max": 11,
             "bound": "estimate",
             "congestion": null,
             "observed_at": null,
@@ -1709,9 +1709,9 @@
           },
           "to_bih": {
             "available": true,
-            "label": "1 min",
-            "wait_minutes_min": 1,
-            "wait_minutes_max": 1,
+            "label": "11 min",
+            "wait_minutes_min": 11,
+            "wait_minutes_max": 11,
             "bound": "estimate",
             "congestion": null,
             "observed_at": null,
@@ -1727,9 +1727,9 @@
         "error": null,
         "to_serbia": {
           "available": true,
-          "label": "1 min",
-          "wait_minutes_min": 1,
-          "wait_minutes_max": 1,
+          "label": "11 min",
+          "wait_minutes_min": 11,
+          "wait_minutes_max": 11,
           "bound": "estimate",
           "congestion": null,
           "observed_at": null,
@@ -1743,9 +1743,9 @@
         },
         "to_bih": {
           "available": true,
-          "label": "1 min",
-          "wait_minutes_min": 1,
-          "wait_minutes_max": 1,
+          "label": "11 min",
+          "wait_minutes_min": 11,
+          "wait_minutes_max": 11,
           "bound": "estimate",
           "congestion": null,
           "observed_at": null,
@@ -1782,8 +1782,8 @@
         "wait_minutes": 30,
         "bound": "upper",
         "scope": "both_or_unspecified",
-        "observed_at": "2026-10-28T06:28:00+01:00",
-        "observed_text": "28.10.2026. u 06:28",
+        "observed_at": "2026-10-28T08:33:00+01:00",
+        "observed_text": "28.10.2026. u 08:33",
         "raw_text": "Zadržavanja putničkih vozila nisu duža od 30 minuta. Od 2. 12. 2025. godine granični prijelaz Karakaj je otvoren za sve kategorije vozila."
       },
       "granica_rs": {
@@ -1791,9 +1791,9 @@
         "directions": {
           "to_serbia": {
             "available": true,
-            "label": "1 min",
-            "wait_minutes_min": 1,
-            "wait_minutes_max": 1,
+            "label": "11 min",
+            "wait_minutes_min": 11,
+            "wait_minutes_max": 11,
             "bound": "estimate",
             "congestion": null,
             "observed_at": null,
@@ -1807,9 +1807,9 @@
           },
           "to_bih": {
             "available": true,
-            "label": "1 min",
-            "wait_minutes_min": 1,
-            "wait_minutes_max": 1,
+            "label": "11 min",
+            "wait_minutes_min": 11,
+            "wait_minutes_max": 11,
             "bound": "estimate",
             "congestion": null,
             "observed_at": null,
@@ -1825,9 +1825,9 @@
         "error": null,
         "to_serbia": {
           "available": true,
-          "label": "1 min",
-          "wait_minutes_min": 1,
-          "wait_minutes_max": 1,
+          "label": "11 min",
+          "wait_minutes_min": 11,
+          "wait_minutes_max": 11,
           "bound": "estimate",
           "congestion": null,
           "observed_at": null,
@@ -1841,9 +1841,9 @@
         },
         "to_bih": {
           "available": true,
-          "label": "1 min",
-          "wait_minutes_min": 1,
-          "wait_minutes_max": 1,
+          "label": "11 min",
+          "wait_minutes_min": 11,
+          "wait_minutes_max": 11,
           "bound": "estimate",
           "congestion": null,
           "observed_at": null,
@@ -1880,8 +1880,8 @@
         "wait_minutes": 30,
         "bound": "upper",
         "scope": "both_or_unspecified",
-        "observed_at": "2026-10-28T06:28:00+01:00",
-        "observed_text": "28.10.2026. u 06:28",
+        "observed_at": "2026-10-28T08:33:00+01:00",
+        "observed_text": "28.10.2026. u 08:33",
         "raw_text": "Zadržavanja putničkih vozila nisu duža od 30 minuta."
       },
       "granica_rs": {
@@ -1889,9 +1889,9 @@
         "directions": {
           "to_serbia": {
             "available": true,
-            "label": "1 min",
-            "wait_minutes_min": 1,
-            "wait_minutes_max": 1,
+            "label": "11 min",
+            "wait_minutes_min": 11,
+            "wait_minutes_max": 11,
             "bound": "estimate",
             "congestion": null,
             "observed_at": null,
@@ -1905,9 +1905,9 @@
           },
           "to_bih": {
             "available": true,
-            "label": "1 min",
-            "wait_minutes_min": 1,
-            "wait_minutes_max": 1,
+            "label": "11 min",
+            "wait_minutes_min": 11,
+            "wait_minutes_max": 11,
             "bound": "estimate",
             "congestion": null,
             "observed_at": null,
@@ -1923,9 +1923,9 @@
         "error": null,
         "to_serbia": {
           "available": true,
-          "label": "1 min",
-          "wait_minutes_min": 1,
-          "wait_minutes_max": 1,
+          "label": "11 min",
+          "wait_minutes_min": 11,
+          "wait_minutes_max": 11,
           "bound": "estimate",
           "congestion": null,
           "observed_at": null,
@@ -1939,9 +1939,9 @@
         },
         "to_bih": {
           "available": true,
-          "label": "1 min",
-          "wait_minutes_min": 1,
-          "wait_minutes_max": 1,
+          "label": "11 min",
+          "wait_minutes_min": 11,
+          "wait_minutes_max": 11,
           "bound": "estimate",
           "congestion": null,
           "observed_at": null,
@@ -1963,7 +1963,7 @@
         "label": "2 h",
         "wait_minutes": 120,
         "observed_at": "2026-10-28T05:14:45+01:00",
-        "observed_text": "28.10.2026. 5:14:45"
+        "observed_text": "28.10.2026 05:14:45"
       },
       "to_croatia": {
         "label": "Nema podataka",
@@ -1978,8 +1978,8 @@
         "wait_minutes": null,
         "bound": null,
         "scope": "unspecified",
-        "observed_at": "2026-10-28T06:28:00+01:00",
-        "observed_text": "28.10.2026. u 06:28",
+        "observed_at": "2026-10-28T08:33:00+01:00",
+        "observed_text": "28.10.2026. u 08:33",
         "raw_text": null
       },
       "granica_rs": {
@@ -1987,9 +1987,9 @@
         "directions": {
           "to_serbia": {
             "available": true,
-            "label": "2 min",
-            "wait_minutes_min": 2,
-            "wait_minutes_max": 2,
+            "label": "12 min",
+            "wait_minutes_min": 12,
+            "wait_minutes_max": 12,
             "bound": "estimate",
             "congestion": null,
             "observed_at": null,
@@ -2003,9 +2003,9 @@
           },
           "to_croatia": {
             "available": true,
-            "label": "2 min",
-            "wait_minutes_min": 2,
-            "wait_minutes_max": 2,
+            "label": "12 min",
+            "wait_minutes_min": 12,
+            "wait_minutes_max": 12,
             "bound": "estimate",
             "congestion": null,
             "observed_at": null,
@@ -2021,9 +2021,9 @@
         "error": null,
         "to_serbia": {
           "available": true,
-          "label": "2 min",
-          "wait_minutes_min": 2,
-          "wait_minutes_max": 2,
+          "label": "12 min",
+          "wait_minutes_min": 12,
+          "wait_minutes_max": 12,
           "bound": "estimate",
           "congestion": null,
           "observed_at": null,
@@ -2037,9 +2037,9 @@
         },
         "to_croatia": {
           "available": true,
-          "label": "2 min",
-          "wait_minutes_min": 2,
-          "wait_minutes_max": 2,
+          "label": "12 min",
+          "wait_minutes_min": 12,
+          "wait_minutes_max": 12,
           "bound": "estimate",
           "congestion": null,
           "observed_at": null,
@@ -2061,7 +2061,7 @@
         "label": "4 h",
         "wait_minutes": 240,
         "observed_at": "2026-10-28T08:08:29+01:00",
-        "observed_text": "28.10.2026. 8:08:29"
+        "observed_text": "28.10.2026 08:08:29"
       },
       "to_croatia": {
         "label": "Nema podataka",
@@ -2076,8 +2076,8 @@
         "wait_minutes": null,
         "bound": null,
         "scope": "unspecified",
-        "observed_at": "2026-10-28T06:28:00+01:00",
-        "observed_text": "28.10.2026. u 06:28",
+        "observed_at": "2026-10-28T08:33:00+01:00",
+        "observed_text": "28.10.2026. u 08:33",
         "raw_text": null
       },
       "granica_rs": {
@@ -2085,9 +2085,9 @@
         "directions": {
           "to_serbia": {
             "available": true,
-            "label": "2 min",
-            "wait_minutes_min": 2,
-            "wait_minutes_max": 2,
+            "label": "12 min",
+            "wait_minutes_min": 12,
+            "wait_minutes_max": 12,
             "bound": "estimate",
             "congestion": null,
             "observed_at": null,
@@ -2101,9 +2101,9 @@
           },
           "to_croatia": {
             "available": true,
-            "label": "2 min",
-            "wait_minutes_min": 2,
-            "wait_minutes_max": 2,
+            "label": "12 min",
+            "wait_minutes_min": 12,
+            "wait_minutes_max": 12,
             "bound": "estimate",
             "congestion": null,
             "observed_at": null,
@@ -2119,9 +2119,9 @@
         "error": null,
         "to_serbia": {
           "available": true,
-          "label": "2 min",
-          "wait_minutes_min": 2,
-          "wait_minutes_max": 2,
+          "label": "12 min",
+          "wait_minutes_min": 12,
+          "wait_minutes_max": 12,
           "bound": "estimate",
           "congestion": null,
           "observed_at": null,
@@ -2135,9 +2135,9 @@
         },
         "to_croatia": {
           "available": true,
-          "label": "2 min",
-          "wait_minutes_min": 2,
-          "wait_minutes_max": 2,
+          "label": "12 min",
+          "wait_minutes_min": 12,
+          "wait_minutes_max": 12,
           "bound": "estimate",
           "congestion": null,
           "observed_at": null,
@@ -2174,8 +2174,8 @@
         "wait_minutes": null,
         "bound": null,
         "scope": "unspecified",
-        "observed_at": "2026-10-28T06:28:00+01:00",
-        "observed_text": "28.10.2026. u 06:28",
+        "observed_at": "2026-10-28T08:33:00+01:00",
+        "observed_text": "28.10.2026. u 08:33",
         "raw_text": null
       },
       "granica_rs": {
@@ -2183,9 +2183,9 @@
         "directions": {
           "to_serbia": {
             "available": true,
-            "label": "2 min",
-            "wait_minutes_min": 2,
-            "wait_minutes_max": 2,
+            "label": "12 min",
+            "wait_minutes_min": 12,
+            "wait_minutes_max": 12,
             "bound": "estimate",
             "congestion": null,
             "observed_at": null,
@@ -2199,9 +2199,9 @@
           },
           "to_croatia": {
             "available": true,
-            "label": "2 min",
-            "wait_minutes_min": 2,
-            "wait_minutes_max": 2,
+            "label": "12 min",
+            "wait_minutes_min": 12,
+            "wait_minutes_max": 12,
             "bound": "estimate",
             "congestion": null,
             "observed_at": null,
@@ -2217,9 +2217,9 @@
         "error": null,
         "to_serbia": {
           "available": true,
-          "label": "2 min",
-          "wait_minutes_min": 2,
-          "wait_minutes_max": 2,
+          "label": "12 min",
+          "wait_minutes_min": 12,
+          "wait_minutes_max": 12,
           "bound": "estimate",
           "congestion": null,
           "observed_at": null,
@@ -2233,9 +2233,9 @@
         },
         "to_croatia": {
           "available": true,
-          "label": "2 min",
-          "wait_minutes_min": 2,
-          "wait_minutes_max": 2,
+          "label": "12 min",
+          "wait_minutes_min": 12,
+          "wait_minutes_max": 12,
           "bound": "estimate",
           "congestion": null,
           "observed_at": null,
@@ -2272,8 +2272,8 @@
         "wait_minutes": null,
         "bound": null,
         "scope": "unspecified",
-        "observed_at": "2026-10-28T06:28:00+01:00",
-        "observed_text": "28.10.2026. u 06:28",
+        "observed_at": "2026-10-28T08:33:00+01:00",
+        "observed_text": "28.10.2026. u 08:33",
         "raw_text": null
       },
       "granica_rs": {
@@ -2281,9 +2281,9 @@
         "directions": {
           "to_serbia": {
             "available": true,
-            "label": "2 min",
-            "wait_minutes_min": 2,
-            "wait_minutes_max": 2,
+            "label": "12 min",
+            "wait_minutes_min": 12,
+            "wait_minutes_max": 12,
             "bound": "estimate",
             "congestion": null,
             "observed_at": null,
@@ -2297,9 +2297,9 @@
           },
           "to_croatia": {
             "available": true,
-            "label": "2 min",
-            "wait_minutes_min": 2,
-            "wait_minutes_max": 2,
+            "label": "12 min",
+            "wait_minutes_min": 12,
+            "wait_minutes_max": 12,
             "bound": "estimate",
             "congestion": null,
             "observed_at": null,
@@ -2315,9 +2315,9 @@
         "error": null,
         "to_serbia": {
           "available": true,
-          "label": "2 min",
-          "wait_minutes_min": 2,
-          "wait_minutes_max": 2,
+          "label": "12 min",
+          "wait_minutes_min": 12,
+          "wait_minutes_max": 12,
           "bound": "estimate",
           "congestion": null,
           "observed_at": null,
@@ -2331,9 +2331,9 @@
         },
         "to_croatia": {
           "available": true,
-          "label": "2 min",
-          "wait_minutes_min": 2,
-          "wait_minutes_max": 2,
+          "label": "12 min",
+          "wait_minutes_min": 12,
+          "wait_minutes_max": 12,
           "bound": "estimate",
           "congestion": null,
           "observed_at": null,
@@ -2355,7 +2355,7 @@
         "label": "Višesatna čekanja",
         "wait_minutes": null,
         "observed_at": "2026-10-28T07:06:25+01:00",
-        "observed_text": "28.10.2026. 7:06:25"
+        "observed_text": "28.10.2026 07:06:25"
       },
       "to_croatia": {
         "label": "Nema podataka",
@@ -2370,8 +2370,8 @@
         "wait_minutes": null,
         "bound": null,
         "scope": "unspecified",
-        "observed_at": "2026-10-28T06:28:00+01:00",
-        "observed_text": "28.10.2026. u 06:28",
+        "observed_at": "2026-10-28T08:33:00+01:00",
+        "observed_text": "28.10.2026. u 08:33",
         "raw_text": null
       },
       "granica_rs": {
@@ -2379,9 +2379,9 @@
         "directions": {
           "to_serbia": {
             "available": true,
-            "label": "2 min",
-            "wait_minutes_min": 2,
-            "wait_minutes_max": 2,
+            "label": "12 min",
+            "wait_minutes_min": 12,
+            "wait_minutes_max": 12,
             "bound": "estimate",
             "congestion": null,
             "observed_at": null,
@@ -2395,9 +2395,9 @@
           },
           "to_croatia": {
             "available": true,
-            "label": "2 min",
-            "wait_minutes_min": 2,
-            "wait_minutes_max": 2,
+            "label": "12 min",
+            "wait_minutes_min": 12,
+            "wait_minutes_max": 12,
             "bound": "estimate",
             "congestion": null,
             "observed_at": null,
@@ -2413,9 +2413,9 @@
         "error": null,
         "to_serbia": {
           "available": true,
-          "label": "2 min",
-          "wait_minutes_min": 2,
-          "wait_minutes_max": 2,
+          "label": "12 min",
+          "wait_minutes_min": 12,
+          "wait_minutes_max": 12,
           "bound": "estimate",
           "congestion": null,
           "observed_at": null,
@@ -2429,9 +2429,9 @@
         },
         "to_croatia": {
           "available": true,
-          "label": "2 min",
-          "wait_minutes_min": 2,
-          "wait_minutes_max": 2,
+          "label": "12 min",
+          "wait_minutes_min": 12,
+          "wait_minutes_max": 12,
           "bound": "estimate",
           "congestion": null,
           "observed_at": null,
