@@ -1,19 +1,19 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-11-09T18:01:20Z",
+  "generated_at": "2026-11-09T18:31:06Z",
   "source": {
     "name": "HAK / MUP RH",
     "url": "https://www.hak.hr/info/stanje-na-cestama/",
-    "source_updated": "09.11.2026. 17:45",
-    "source_updated_at": "2026-11-09T17:45:00+01:00",
+    "source_updated": "09.11.2026. 19:28",
+    "source_updated_at": "2026-11-09T19:28:00+01:00",
     "error": null
   },
   "sources": {
     "hak": {
       "name": "HAK / MUP RH",
       "url": "https://www.hak.hr/info/stanje-na-cestama/",
-      "source_updated": "09.11.2026. 17:45",
-      "source_updated_at": "2026-11-09T17:45:00+01:00",
+      "source_updated": "09.11.2026. 19:28",
+      "source_updated_at": "2026-11-09T19:28:00+01:00",
       "error": null
     },
     "bihamk": {
@@ -61,9 +61,9 @@
         "directions": {
           "to_bih": {
             "available": true,
-            "label": "30 min",
-            "wait_minutes_min": 30,
-            "wait_minutes_max": 30,
+            "label": "29 min",
+            "wait_minutes_min": 29,
+            "wait_minutes_max": 29,
             "bound": "estimate",
             "congestion": null,
             "observed_at": null,
@@ -71,7 +71,7 @@
             "page_url": "https://granica.rs/prelaz/hr-gornji-varos",
             "rendered_with_browser": true,
             "error": null,
-            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-gornji-varos-1/2026-11-09/173150.jpg",
+            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-gornji-varos-1/2026-11-09/180151.jpg",
             "camera_alt": "",
             "transport": "browser"
           },
@@ -87,7 +87,7 @@
             "page_url": "https://granica.rs/prelaz/ba-gradiska",
             "rendered_with_browser": true,
             "error": null,
-            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/ams-gradiska-exit/2026-11-09/173131.jpg",
+            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/ams-gradiska-exit/2026-11-09/180129.jpg",
             "camera_alt": "",
             "transport": "browser"
           }
@@ -95,9 +95,9 @@
         "error": null,
         "to_bih": {
           "available": true,
-          "label": "30 min",
-          "wait_minutes_min": 30,
-          "wait_minutes_max": 30,
+          "label": "29 min",
+          "wait_minutes_min": 29,
+          "wait_minutes_max": 29,
           "bound": "estimate",
           "congestion": null,
           "observed_at": null,
@@ -105,7 +105,7 @@
           "page_url": "https://granica.rs/prelaz/hr-gornji-varos",
           "rendered_with_browser": true,
           "error": null,
-          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-gornji-varos-1/2026-11-09/173150.jpg",
+          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-gornji-varos-1/2026-11-09/180151.jpg",
           "camera_alt": "",
           "transport": "browser"
         },
@@ -121,7 +121,7 @@
           "page_url": "https://granica.rs/prelaz/ba-gradiska",
           "rendered_with_browser": true,
           "error": null,
-          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/ams-gradiska-exit/2026-11-09/173131.jpg",
+          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/ams-gradiska-exit/2026-11-09/180129.jpg",
           "camera_alt": "",
           "transport": "browser"
         }
@@ -169,7 +169,7 @@
             "page_url": "https://granica.rs/prelaz/hr-slavonski-brod",
             "rendered_with_browser": true,
             "error": null,
-            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-slavonski-brod-exit/2026-11-09/173148.jpg",
+            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-slavonski-brod-exit/2026-11-09/180148.jpg",
             "camera_alt": "",
             "transport": "browser"
           },
@@ -185,7 +185,7 @@
             "page_url": "https://granica.rs/prelaz/ba-brod",
             "rendered_with_browser": true,
             "error": null,
-            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/ams-brod-exit/2026-11-09/173133.jpg",
+            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/ams-brod-exit/2026-11-09/180130.jpg",
             "camera_alt": "",
             "transport": "browser"
           }
@@ -203,7 +203,7 @@
           "page_url": "https://granica.rs/prelaz/hr-slavonski-brod",
           "rendered_with_browser": true,
           "error": null,
-          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-slavonski-brod-exit/2026-11-09/173148.jpg",
+          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-slavonski-brod-exit/2026-11-09/180148.jpg",
           "camera_alt": "",
           "transport": "browser"
         },
@@ -219,7 +219,7 @@
           "page_url": "https://granica.rs/prelaz/ba-brod",
           "rendered_with_browser": true,
           "error": null,
-          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/ams-brod-exit/2026-11-09/173133.jpg",
+          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/ams-brod-exit/2026-11-09/180130.jpg",
           "camera_alt": "",
           "transport": "browser"
         }
@@ -267,7 +267,7 @@
             "page_url": "https://granica.rs/prelaz/hr-svilaj",
             "rendered_with_browser": true,
             "error": null,
-            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-svilaj-exit/2026-11-09/173146.jpg",
+            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-svilaj-exit/2026-11-09/180147.jpg",
             "camera_alt": "",
             "transport": "browser"
           },
@@ -283,7 +283,7 @@
             "page_url": "https://granica.rs/prelaz/ba-svilaj",
             "rendered_with_browser": true,
             "error": null,
-            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/ams-svilaj-exit/2026-11-09/173141.jpg",
+            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/ams-svilaj-exit/2026-11-09/180140.jpg",
             "camera_alt": "",
             "transport": "browser"
           }
@@ -301,7 +301,7 @@
           "page_url": "https://granica.rs/prelaz/hr-svilaj",
           "rendered_with_browser": true,
           "error": null,
-          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-svilaj-exit/2026-11-09/173146.jpg",
+          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-svilaj-exit/2026-11-09/180147.jpg",
           "camera_alt": "",
           "transport": "browser"
         },
@@ -317,7 +317,7 @@
           "page_url": "https://granica.rs/prelaz/ba-svilaj",
           "rendered_with_browser": true,
           "error": null,
-          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/ams-svilaj-exit/2026-11-09/173141.jpg",
+          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/ams-svilaj-exit/2026-11-09/180140.jpg",
           "camera_alt": "",
           "transport": "browser"
         }
@@ -365,7 +365,7 @@
             "page_url": "https://granica.rs/prelaz/hr-zupanja",
             "rendered_with_browser": true,
             "error": null,
-            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-zupanja-exit/2026-11-09/173144.jpg",
+            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-zupanja-exit/2026-11-09/180144.jpg",
             "camera_alt": "",
             "transport": "browser"
           },
@@ -398,7 +398,7 @@
           "page_url": "https://granica.rs/prelaz/hr-zupanja",
           "rendered_with_browser": true,
           "error": null,
-          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-zupanja-exit/2026-11-09/173144.jpg",
+          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-zupanja-exit/2026-11-09/180144.jpg",
           "camera_alt": "",
           "transport": "browser"
         },
@@ -461,7 +461,7 @@
             "page_url": "https://granica.rs/prelaz/hr-stara-gradiska",
             "rendered_with_browser": true,
             "error": null,
-            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-bosanska-gradiska-exit/2026-11-09/173149.jpg",
+            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-bosanska-gradiska-exit/2026-11-09/180150.jpg",
             "camera_alt": "",
             "transport": "browser"
           },
@@ -477,7 +477,7 @@
             "page_url": "https://granica.rs/prelaz/ba-gradiska",
             "rendered_with_browser": true,
             "error": null,
-            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/ams-gradiska-exit/2026-11-09/173131.jpg",
+            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/ams-gradiska-exit/2026-11-09/180129.jpg",
             "camera_alt": "",
             "transport": "browser"
           }
@@ -495,7 +495,7 @@
           "page_url": "https://granica.rs/prelaz/hr-stara-gradiska",
           "rendered_with_browser": true,
           "error": null,
-          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-bosanska-gradiska-exit/2026-11-09/173149.jpg",
+          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-bosanska-gradiska-exit/2026-11-09/180150.jpg",
           "camera_alt": "",
           "transport": "browser"
         },
@@ -511,7 +511,7 @@
           "page_url": "https://granica.rs/prelaz/ba-gradiska",
           "rendered_with_browser": true,
           "error": null,
-          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/ams-gradiska-exit/2026-11-09/173131.jpg",
+          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/ams-gradiska-exit/2026-11-09/180129.jpg",
           "camera_alt": "",
           "transport": "browser"
         }
@@ -559,7 +559,7 @@
             "page_url": "https://granica.rs/prelaz/hr-hrvatska-kostajnica",
             "rendered_with_browser": true,
             "error": null,
-            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-hrvatska-kostajnica-2/2026-11-09/173151.jpg",
+            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-hrvatska-kostajnica-2/2026-11-09/180152.jpg",
             "camera_alt": "",
             "transport": "browser"
           },
@@ -575,7 +575,7 @@
             "page_url": "https://granica.rs/prelaz/ba-kostajnica",
             "rendered_with_browser": true,
             "error": null,
-            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/ams-kostajnica-exit/2026-11-09/180137.jpg",
+            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/ams-kostajnica-exit/2026-11-09/183144.jpg",
             "camera_alt": "",
             "transport": "browser"
           }
@@ -593,7 +593,7 @@
           "page_url": "https://granica.rs/prelaz/hr-hrvatska-kostajnica",
           "rendered_with_browser": true,
           "error": null,
-          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-hrvatska-kostajnica-2/2026-11-09/173151.jpg",
+          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-hrvatska-kostajnica-2/2026-11-09/180152.jpg",
           "camera_alt": "",
           "transport": "browser"
         },
@@ -609,7 +609,7 @@
           "page_url": "https://granica.rs/prelaz/ba-kostajnica",
           "rendered_with_browser": true,
           "error": null,
-          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/ams-kostajnica-exit/2026-11-09/180137.jpg",
+          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/ams-kostajnica-exit/2026-11-09/183144.jpg",
           "camera_alt": "",
           "transport": "browser"
         }
@@ -617,13 +617,13 @@
     },
     "slavonski_samac_samac": {
       "name": "Slavonski Šamac – Šamac",
-      "hak_name": "Slavonski Šamac (Šamac)",
-      "available": false,
+      "hak_name": "Slavonski Šamac (Bosanski Šamac)",
+      "available": true,
       "to_bih": {
-        "label": "Nema podataka",
-        "wait_minutes": null,
-        "observed_at": null,
-        "observed_text": null
+        "label": "1 h 30 min",
+        "wait_minutes": 90,
+        "observed_at": "2026-11-09T19:13:19+01:00",
+        "observed_text": "9.11.2026. 19:13:19"
       },
       "to_croatia": {
         "label": "Nema podataka",
@@ -657,15 +657,15 @@
             "page_url": "https://granica.rs/prelaz/hr-slavonski-samac",
             "rendered_with_browser": true,
             "error": null,
-            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-slavonski-samac-exit/2026-11-09/180146.jpg",
+            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-slavonski-samac-exit/2026-11-09/183150.jpg",
             "camera_alt": "",
             "transport": "browser"
           },
           "to_croatia": {
             "available": true,
-            "label": "10 min",
-            "wait_minutes_min": 10,
-            "wait_minutes_max": 10,
+            "label": "5 min",
+            "wait_minutes_min": 5,
+            "wait_minutes_max": 5,
             "bound": "estimate",
             "congestion": null,
             "observed_at": null,
@@ -673,7 +673,7 @@
             "page_url": "https://granica.rs/prelaz/ba-samac",
             "rendered_with_browser": true,
             "error": null,
-            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/ams-samac-exit/2026-11-09/180141.jpg",
+            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/ams-samac-exit/2026-11-09/183146.jpg",
             "camera_alt": "",
             "transport": "browser"
           }
@@ -691,15 +691,15 @@
           "page_url": "https://granica.rs/prelaz/hr-slavonski-samac",
           "rendered_with_browser": true,
           "error": null,
-          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-slavonski-samac-exit/2026-11-09/180146.jpg",
+          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-slavonski-samac-exit/2026-11-09/183150.jpg",
           "camera_alt": "",
           "transport": "browser"
         },
         "to_croatia": {
           "available": true,
-          "label": "10 min",
-          "wait_minutes_min": 10,
-          "wait_minutes_max": 10,
+          "label": "5 min",
+          "wait_minutes_min": 5,
+          "wait_minutes_max": 5,
           "bound": "estimate",
           "congestion": null,
           "observed_at": null,
@@ -707,7 +707,7 @@
           "page_url": "https://granica.rs/prelaz/ba-samac",
           "rendered_with_browser": true,
           "error": null,
-          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/ams-samac-exit/2026-11-09/180141.jpg",
+          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/ams-samac-exit/2026-11-09/183146.jpg",
           "camera_alt": "",
           "transport": "browser"
         }
@@ -755,7 +755,7 @@
             "page_url": "https://granica.rs/prelaz/hr-gunja",
             "rendered_with_browser": true,
             "error": null,
-            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-gunja-exit/2026-11-09/180143.jpg",
+            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-gunja-exit/2026-11-09/183148.jpg",
             "camera_alt": "",
             "transport": "browser"
           }
@@ -773,7 +773,7 @@
           "page_url": "https://granica.rs/prelaz/hr-gunja",
           "rendered_with_browser": true,
           "error": null,
-          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-gunja-exit/2026-11-09/180143.jpg",
+          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-gunja-exit/2026-11-09/183148.jpg",
           "camera_alt": "",
           "transport": "browser"
         }
@@ -821,7 +821,7 @@
             "page_url": "https://granica.rs/prelaz/hr-kamensko",
             "rendered_with_browser": true,
             "error": null,
-            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-kamensko-exit/2026-11-09/180154.jpg",
+            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-kamensko-exit/2026-11-09/183200.jpg",
             "camera_alt": "",
             "transport": "browser"
           },
@@ -855,7 +855,7 @@
           "page_url": "https://granica.rs/prelaz/hr-kamensko",
           "rendered_with_browser": true,
           "error": null,
-          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-kamensko-exit/2026-11-09/180154.jpg",
+          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-kamensko-exit/2026-11-09/183200.jpg",
           "camera_alt": "",
           "transport": "browser"
         },
@@ -919,7 +919,7 @@
             "page_url": "https://granica.rs/prelaz/hr-arzano",
             "rendered_with_browser": true,
             "error": null,
-            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-arzano-exit/2026-11-09/180155.jpg",
+            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-arzano-exit/2026-11-09/183201.jpg",
             "camera_alt": "",
             "transport": "browser"
           },
@@ -953,7 +953,7 @@
           "page_url": "https://granica.rs/prelaz/hr-arzano",
           "rendered_with_browser": true,
           "error": null,
-          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-arzano-exit/2026-11-09/180155.jpg",
+          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-arzano-exit/2026-11-09/183201.jpg",
           "camera_alt": "",
           "transport": "browser"
         },
@@ -1017,7 +1017,7 @@
             "page_url": "https://granica.rs/prelaz/hr-nova-sela-bijaca",
             "rendered_with_browser": true,
             "error": null,
-            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-nova-sela-exit/2026-11-09/180158.jpg",
+            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-nova-sela-exit/2026-11-09/183204.jpg",
             "camera_alt": "",
             "transport": "browser"
           },
@@ -1051,7 +1051,7 @@
           "page_url": "https://granica.rs/prelaz/hr-nova-sela-bijaca",
           "rendered_with_browser": true,
           "error": null,
-          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-nova-sela-exit/2026-11-09/180158.jpg",
+          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-nova-sela-exit/2026-11-09/183204.jpg",
           "camera_alt": "",
           "transport": "browser"
         },
@@ -1105,26 +1105,26 @@
         "directions": {
           "to_bih": {
             "available": true,
-            "label": "15-25 min",
-            "wait_minutes_min": 15,
-            "wait_minutes_max": 25,
-            "bound": "range",
+            "label": "5 min",
+            "wait_minutes_min": 5,
+            "wait_minutes_max": 5,
+            "bound": "estimate",
             "congestion": null,
             "observed_at": null,
             "observed_text": null,
             "page_url": "https://granica.rs/prelaz/hr-metkovic",
             "rendered_with_browser": true,
             "error": null,
-            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-metkovic-exit-2/2026-11-09/180200.jpg",
+            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-metkovic-exit/2026-11-09/183206.jpg",
             "camera_alt": "",
             "transport": "browser"
           },
           "to_croatia": {
             "available": true,
-            "label": "15-25 min",
-            "wait_minutes_min": 15,
-            "wait_minutes_max": 25,
-            "bound": "range",
+            "label": "5 min",
+            "wait_minutes_min": 5,
+            "wait_minutes_max": 5,
+            "bound": "estimate",
             "congestion": null,
             "observed_at": null,
             "observed_text": null,
@@ -1139,26 +1139,26 @@
         "error": null,
         "to_bih": {
           "available": true,
-          "label": "15-25 min",
-          "wait_minutes_min": 15,
-          "wait_minutes_max": 25,
-          "bound": "range",
+          "label": "5 min",
+          "wait_minutes_min": 5,
+          "wait_minutes_max": 5,
+          "bound": "estimate",
           "congestion": null,
           "observed_at": null,
           "observed_text": null,
           "page_url": "https://granica.rs/prelaz/hr-metkovic",
           "rendered_with_browser": true,
           "error": null,
-          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-metkovic-exit-2/2026-11-09/180200.jpg",
+          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-metkovic-exit/2026-11-09/183206.jpg",
           "camera_alt": "",
           "transport": "browser"
         },
         "to_croatia": {
           "available": true,
-          "label": "15-25 min",
-          "wait_minutes_min": 15,
-          "wait_minutes_max": 25,
-          "bound": "range",
+          "label": "5 min",
+          "wait_minutes_min": 5,
+          "wait_minutes_max": 5,
+          "bound": "estimate",
           "congestion": null,
           "observed_at": null,
           "observed_text": null,
@@ -1213,7 +1213,7 @@
             "page_url": "https://granica.rs/prelaz/hr-klek-neum",
             "rendered_with_browser": true,
             "error": null,
-            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-klek-neum-exit/2026-11-09/180200.jpg",
+            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-klek-neum-exit/2026-11-09/183207.jpg",
             "camera_alt": "",
             "transport": "browser"
           },
@@ -1247,7 +1247,7 @@
           "page_url": "https://granica.rs/prelaz/hr-klek-neum",
           "rendered_with_browser": true,
           "error": null,
-          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-klek-neum-exit/2026-11-09/180200.jpg",
+          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-klek-neum-exit/2026-11-09/183207.jpg",
           "camera_alt": "",
           "transport": "browser"
         },
@@ -1301,9 +1301,9 @@
         "directions": {
           "to_bih": {
             "available": true,
-            "label": "5 min",
-            "wait_minutes_min": 5,
-            "wait_minutes_max": 5,
+            "label": "1 min",
+            "wait_minutes_min": 1,
+            "wait_minutes_max": 1,
             "bound": "estimate",
             "congestion": null,
             "observed_at": null,
@@ -1311,15 +1311,15 @@
             "page_url": "https://granica.rs/prelaz/hr-zaton-doli-neum",
             "rendered_with_browser": true,
             "error": null,
-            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-zaton-doli-exit/2026-11-09/180202.jpg",
+            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-zaton-doli-exit/2026-11-09/183208.jpg",
             "camera_alt": "",
             "transport": "browser"
           },
           "to_croatia": {
             "available": true,
-            "label": "5 min",
-            "wait_minutes_min": 5,
-            "wait_minutes_max": 5,
+            "label": "1 min",
+            "wait_minutes_min": 1,
+            "wait_minutes_max": 1,
             "bound": "estimate",
             "congestion": null,
             "observed_at": null,
@@ -1335,9 +1335,9 @@
         "error": null,
         "to_bih": {
           "available": true,
-          "label": "5 min",
-          "wait_minutes_min": 5,
-          "wait_minutes_max": 5,
+          "label": "1 min",
+          "wait_minutes_min": 1,
+          "wait_minutes_max": 1,
           "bound": "estimate",
           "congestion": null,
           "observed_at": null,
@@ -1345,15 +1345,15 @@
           "page_url": "https://granica.rs/prelaz/hr-zaton-doli-neum",
           "rendered_with_browser": true,
           "error": null,
-          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-zaton-doli-exit/2026-11-09/180202.jpg",
+          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-zaton-doli-exit/2026-11-09/183208.jpg",
           "camera_alt": "",
           "transport": "browser"
         },
         "to_croatia": {
           "available": true,
-          "label": "5 min",
-          "wait_minutes_min": 5,
-          "wait_minutes_max": 5,
+          "label": "1 min",
+          "wait_minutes_min": 1,
+          "wait_minutes_max": 1,
           "bound": "estimate",
           "congestion": null,
           "observed_at": null,
@@ -1399,9 +1399,9 @@
         "directions": {
           "to_bih": {
             "available": true,
-            "label": "5 min",
-            "wait_minutes_min": 5,
-            "wait_minutes_max": 5,
+            "label": "1 min",
+            "wait_minutes_min": 1,
+            "wait_minutes_max": 1,
             "bound": "estimate",
             "congestion": null,
             "observed_at": null,
@@ -1409,15 +1409,15 @@
             "page_url": "https://granica.rs/prelaz/hr-brgat",
             "rendered_with_browser": true,
             "error": null,
-            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-brgat-exit/2026-11-09/180203.jpg",
+            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-brgat-exit/2026-11-09/183210.jpg",
             "camera_alt": "",
             "transport": "browser"
           },
           "to_croatia": {
             "available": true,
-            "label": "5 min",
-            "wait_minutes_min": 5,
-            "wait_minutes_max": 5,
+            "label": "1 min",
+            "wait_minutes_min": 1,
+            "wait_minutes_max": 1,
             "bound": "estimate",
             "congestion": null,
             "observed_at": null,
@@ -1433,9 +1433,9 @@
         "error": null,
         "to_bih": {
           "available": true,
-          "label": "5 min",
-          "wait_minutes_min": 5,
-          "wait_minutes_max": 5,
+          "label": "1 min",
+          "wait_minutes_min": 1,
+          "wait_minutes_max": 1,
           "bound": "estimate",
           "congestion": null,
           "observed_at": null,
@@ -1443,15 +1443,15 @@
           "page_url": "https://granica.rs/prelaz/hr-brgat",
           "rendered_with_browser": true,
           "error": null,
-          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-brgat-exit/2026-11-09/180203.jpg",
+          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-brgat-exit/2026-11-09/183210.jpg",
           "camera_alt": "",
           "transport": "browser"
         },
         "to_croatia": {
           "available": true,
-          "label": "5 min",
-          "wait_minutes_min": 5,
-          "wait_minutes_max": 5,
+          "label": "1 min",
+          "wait_minutes_min": 1,
+          "wait_minutes_max": 1,
           "bound": "estimate",
           "congestion": null,
           "observed_at": null,
@@ -1507,7 +1507,7 @@
             "page_url": "https://granica.rs/prelaz/ba-pavlovica-most",
             "rendered_with_browser": true,
             "error": null,
-            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/ams-pavlovica-most-exit/2026-11-09/180132.jpg",
+            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/ams-pavlovica-most-exit/2026-11-09/183139.jpg",
             "camera_alt": "",
             "transport": "browser"
           },
@@ -1541,7 +1541,7 @@
           "page_url": "https://granica.rs/prelaz/ba-pavlovica-most",
           "rendered_with_browser": true,
           "error": null,
-          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/ams-pavlovica-most-exit/2026-11-09/180132.jpg",
+          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/ams-pavlovica-most-exit/2026-11-09/183139.jpg",
           "camera_alt": "",
           "transport": "browser"
         },
@@ -1605,7 +1605,7 @@
             "page_url": "https://granica.rs/prelaz/ba-raca",
             "rendered_with_browser": true,
             "error": null,
-            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/ams-raca-exit/2026-11-09/180129.jpg",
+            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/ams-raca-exit/2026-11-09/183137.jpg",
             "camera_alt": "",
             "transport": "browser"
           },
@@ -1639,7 +1639,7 @@
           "page_url": "https://granica.rs/prelaz/ba-raca",
           "rendered_with_browser": true,
           "error": null,
-          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/ams-raca-exit/2026-11-09/180129.jpg",
+          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/ams-raca-exit/2026-11-09/183137.jpg",
           "camera_alt": "",
           "transport": "browser"
         },
@@ -1703,7 +1703,7 @@
             "page_url": "https://granica.rs/prelaz/ba-sepak",
             "rendered_with_browser": true,
             "error": null,
-            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/ams-sepak-exit/2026-11-09/180133.jpg",
+            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/ams-sepak-exit/2026-11-09/183140.jpg",
             "camera_alt": "",
             "transport": "browser"
           },
@@ -1737,7 +1737,7 @@
           "page_url": "https://granica.rs/prelaz/ba-sepak",
           "rendered_with_browser": true,
           "error": null,
-          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/ams-sepak-exit/2026-11-09/180133.jpg",
+          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/ams-sepak-exit/2026-11-09/183140.jpg",
           "camera_alt": "",
           "transport": "browser"
         },
@@ -1801,7 +1801,7 @@
             "page_url": "https://granica.rs/prelaz/ba-karakaj",
             "rendered_with_browser": true,
             "error": null,
-            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/ams-karakaj-exit/2026-11-09/180133.jpg",
+            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/ams-karakaj-exit/2026-11-09/183141.jpg",
             "camera_alt": "",
             "transport": "browser"
           },
@@ -1835,7 +1835,7 @@
           "page_url": "https://granica.rs/prelaz/ba-karakaj",
           "rendered_with_browser": true,
           "error": null,
-          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/ams-karakaj-exit/2026-11-09/180133.jpg",
+          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/ams-karakaj-exit/2026-11-09/183141.jpg",
           "camera_alt": "",
           "transport": "browser"
         },
@@ -1899,7 +1899,7 @@
             "page_url": "https://granica.rs/prelaz/ba-visegrad",
             "rendered_with_browser": true,
             "error": null,
-            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/ams-visegrad-exit/2026-11-09/180142.jpg",
+            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/ams-visegrad-exit/2026-11-09/183148.jpg",
             "camera_alt": "",
             "transport": "browser"
           },
@@ -1933,7 +1933,7 @@
           "page_url": "https://granica.rs/prelaz/ba-visegrad",
           "rendered_with_browser": true,
           "error": null,
-          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/ams-visegrad-exit/2026-11-09/180142.jpg",
+          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/ams-visegrad-exit/2026-11-09/183148.jpg",
           "camera_alt": "",
           "transport": "browser"
         },
@@ -1962,8 +1962,8 @@
       "to_bih": {
         "label": "3 h",
         "wait_minutes": 180,
-        "observed_at": "2026-11-09T17:20:22+01:00",
-        "observed_text": "9.11.2026. 17:20:22"
+        "observed_at": "2026-11-09T19:28:54+01:00",
+        "observed_text": "9.11.2026. 19:28:54"
       },
       "to_croatia": {
         "label": "Nema podataka",
@@ -1997,7 +1997,7 @@
             "page_url": "https://granica.rs/prelaz/hr-bajakovo",
             "rendered_with_browser": true,
             "error": null,
-            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-bajakovo-exit-2/2026-11-09/180012.jpg",
+            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-bajakovo-exit-2/2026-11-09/183014.jpg",
             "camera_alt": "",
             "transport": "browser"
           },
@@ -2031,7 +2031,7 @@
           "page_url": "https://granica.rs/prelaz/hr-bajakovo",
           "rendered_with_browser": true,
           "error": null,
-          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-bajakovo-exit-2/2026-11-09/180012.jpg",
+          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-bajakovo-exit-2/2026-11-09/183014.jpg",
           "camera_alt": "",
           "transport": "browser"
         },
@@ -2095,7 +2095,7 @@
             "page_url": "https://granica.rs/prelaz/hr-tovarnik",
             "rendered_with_browser": true,
             "error": null,
-            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-tovarnik-exit/2026-11-09/180011.jpg",
+            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-tovarnik-exit/2026-11-09/183012.jpg",
             "camera_alt": "",
             "transport": "browser"
           },
@@ -2129,7 +2129,7 @@
           "page_url": "https://granica.rs/prelaz/hr-tovarnik",
           "rendered_with_browser": true,
           "error": null,
-          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-tovarnik-exit/2026-11-09/180011.jpg",
+          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-tovarnik-exit/2026-11-09/183012.jpg",
           "camera_alt": "",
           "transport": "browser"
         },
@@ -2193,7 +2193,7 @@
             "page_url": "https://granica.rs/prelaz/hr-ilok",
             "rendered_with_browser": true,
             "error": null,
-            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-ilok-exit/2026-11-09/180009.jpg",
+            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-ilok-exit/2026-11-09/183010.jpg",
             "camera_alt": "",
             "transport": "browser"
           },
@@ -2227,7 +2227,7 @@
           "page_url": "https://granica.rs/prelaz/hr-ilok",
           "rendered_with_browser": true,
           "error": null,
-          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-ilok-exit/2026-11-09/180009.jpg",
+          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-ilok-exit/2026-11-09/183010.jpg",
           "camera_alt": "",
           "transport": "browser"
         },
@@ -2291,7 +2291,7 @@
             "page_url": "https://granica.rs/prelaz/hr-erdut",
             "rendered_with_browser": true,
             "error": null,
-            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-erdut-exit/2026-11-09/180007.jpg",
+            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-erdut-exit/2026-11-09/183008.jpg",
             "camera_alt": "",
             "transport": "browser"
           },
@@ -2325,7 +2325,7 @@
           "page_url": "https://granica.rs/prelaz/hr-erdut",
           "rendered_with_browser": true,
           "error": null,
-          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-erdut-exit/2026-11-09/180007.jpg",
+          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-erdut-exit/2026-11-09/183008.jpg",
           "camera_alt": "",
           "transport": "browser"
         },
@@ -2389,7 +2389,7 @@
             "page_url": "https://granica.rs/prelaz/hr-batina",
             "rendered_with_browser": true,
             "error": null,
-            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-batina-exit/2026-11-09/180005.jpg",
+            "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-batina-exit/2026-11-09/183006.jpg",
             "camera_alt": "",
             "transport": "browser"
           },
@@ -2423,7 +2423,7 @@
           "page_url": "https://granica.rs/prelaz/hr-batina",
           "rendered_with_browser": true,
           "error": null,
-          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-batina-exit/2026-11-09/180005.jpg",
+          "camera_url": "https://granicars-snapshots.fra1.cdn.digitaloceanspaces.com/snapshots/hak-batina-exit/2026-11-09/183006.jpg",
           "camera_alt": "",
           "transport": "browser"
         },
